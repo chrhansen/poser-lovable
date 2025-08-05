@@ -3,7 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle } from 'lucide-react';
+import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/AppSidebar';
+import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu } from 'lucide-react';
 
 // Types for FastAPI integration
 interface AnalysisMetric {
@@ -154,18 +156,32 @@ const Results = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <CheckCircle className="w-8 h-8 text-primary" />
-            <h1 className="text-3xl font-bold text-gradient">Analysis Complete</h1>
-          </div>
-          <p className="text-muted-foreground text-lg">
-            Your skiing video has been successfully analyzed. Review the results below.
-          </p>
-        </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gradient-subtle">
+        <AppSidebar />
+        <SidebarInset className="flex-1">
+          {/* Header with toggle */}
+          <header className="h-16 flex items-center border-b border-primary/20 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+            <div className="flex items-center gap-4 px-6">
+              <SidebarTrigger className="hover:bg-primary/10" />
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-6 h-6 text-primary" />
+                <h1 className="text-xl font-bold text-gradient">Analysis Dashboard</h1>
+              </div>
+            </div>
+          </header>
+
+          <div className="container mx-auto px-6 py-8">
+            {/* Header */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <CheckCircle className="w-8 h-8 text-primary" />
+                <h2 className="text-3xl font-bold text-gradient">Analysis Complete</h2>
+              </div>
+              <p className="text-muted-foreground text-lg">
+                Your skiing video has been successfully analyzed. Review the results below.
+              </p>
+            </div>
 
         {/* Stats Cards - Easy to add/remove */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -297,9 +313,11 @@ const Results = () => {
               </Button>
             </div>
           </div>
-        </div>
+          </div>
+          </div>
+        </SidebarInset>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
