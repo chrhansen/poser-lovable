@@ -93,7 +93,7 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
           className={`relative border-2 border-dashed rounded-3xl p-8 md:p-12 text-center transition-all duration-500 group cursor-pointer ${
             dragActive
               ? "border-primary bg-primary/10 scale-[1.02] shadow-glow"
-              : "border-border hover:border-primary/50 hover:bg-card/30 hover:shadow-elegant"
+              : "border-border bg-[hsl(var(--drop-zone))] hover:border-primary/50 hover:bg-primary/5 hover:shadow-elegant"
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -116,26 +116,25 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
               )}
             </div>
             
-            <h3 className="text-lg md:text-xl font-semibold mb-3 text-foreground group-hover:text-gradient transition-all duration-300">
-              {dragActive ? "Drop your video here!" : "Drop your skiing video here"}
+            <h3 className="text-lg md:text-xl font-semibold mb-4 text-foreground group-hover:text-gradient transition-all duration-300">
+              {dragActive ? "Drop your video here!" : "Drag and Drop file here or"}
             </h3>
             
-            <p className="text-muted-foreground mb-6 text-sm md:text-base font-medium">
-              Or click to browse your files
-            </p>
-            
-            <div className="space-y-4">
-              <p className="text-xs md:text-sm text-muted-foreground/80">
-                Supports MP4, MOV, AVI • Max 500MB
-              </p>
-              
-              <Button
-                size="lg"
-                className="px-8 py-3 font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-105"
+            {!dragActive && (
+              <button 
+                className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors duration-200"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fileInputRef.current?.click();
+                }}
               >
-                Choose Video File
-              </Button>
-            </div>
+                Choose file
+              </button>
+            )}
+            
+            <p className="text-xs md:text-sm text-muted-foreground/80 mt-4">
+              Supported formats: MP4, MKV, MOV, AVI • Max 500MB
+            </p>
           </div>
           
           <input
