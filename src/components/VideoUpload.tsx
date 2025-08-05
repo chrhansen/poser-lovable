@@ -90,10 +90,10 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
     <div className="w-full">
       {!selectedVideo ? (
         <div
-          className={`relative border-2 border-dashed rounded-3xl p-8 md:p-12 text-center transition-all duration-500 group cursor-pointer ${
+          className={`relative border-2 border-dashed rounded-3xl p-8 md:p-12 text-center transition-all duration-500 group cursor-pointer shadow-elegant ${
             dragActive
               ? "border-primary bg-primary/10 scale-[1.02] shadow-glow"
-              : "border-border bg-primary/5 hover:border-primary/50 hover:bg-primary/8 hover:shadow-elegant"
+              : "border-primary/50 bg-primary/8 hover:border-primary hover:bg-primary/10 hover:shadow-glow"
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -106,8 +106,8 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
           
           <div className="relative z-10">
             <div className="mb-6 relative">
-              <Upload className={`w-12 h-12 md:w-16 md:h-16 mx-auto text-muted-foreground transition-all duration-300 ${
-                dragActive ? 'scale-110 text-primary' : 'group-hover:scale-105 group-hover:text-primary/80'
+              <Upload className={`w-12 h-12 md:w-16 md:h-16 mx-auto text-primary transition-all duration-300 ${
+                dragActive ? 'scale-110' : 'group-hover:scale-105'
               }`} />
               {dragActive && (
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -116,7 +116,7 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
               )}
             </div>
             
-            <h3 className="text-lg md:text-xl font-semibold mb-4 text-foreground group-hover:text-gradient transition-all duration-300">
+            <h3 className="text-lg md:text-xl font-semibold mb-4 text-gradient transition-all duration-300">
               {dragActive ? "Drop your video here!" : "Drag and Drop file here or"}
             </h3>
             
