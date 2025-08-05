@@ -10,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
@@ -95,14 +96,15 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20`} collapsible="icon">
-      <SidebarHeader className="p-4 border-b border-slate-800 bg-slate-900">
+    <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20 shadow-2xl shadow-black/20`} collapsible="icon">
+      <SidebarHeader className="p-4 border-b border-slate-800 bg-slate-900 flex items-center justify-between">
         {!collapsed && (
           <div>
             <h2 className="text-lg font-semibold text-slate-100">Pose Analysis</h2>
             <p className="text-sm text-slate-400">Previous analyses</p>
           </div>
         )}
+        <SidebarTrigger className="hover:bg-slate-800 text-slate-200 ml-auto" />
       </SidebarHeader>
 
       <SidebarContent className="bg-slate-900">
