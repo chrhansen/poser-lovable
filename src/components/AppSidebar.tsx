@@ -95,19 +95,19 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={collapsed ? "w-14" : "w-80"} collapsible="icon">
-      <SidebarHeader className="p-4 border-b border-primary/20">
+    <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800`} collapsible="icon">
+      <SidebarHeader className="p-4 border-b border-slate-800 bg-slate-900">
         {!collapsed && (
           <div>
-            <h2 className="text-lg font-semibold text-gradient">Pose Analysis</h2>
-            <p className="text-sm text-muted-foreground">Previous analyses</p>
+            <h2 className="text-lg font-semibold text-slate-100">Pose Analysis</h2>
+            <p className="text-sm text-slate-400">Previous analyses</p>
           </div>
         )}
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="bg-slate-900">
         <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? "hidden" : ""}>
+          <SidebarGroupLabel className={`${collapsed ? "hidden" : ""} text-slate-300`}>
             Recent Analyses
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -115,7 +115,7 @@ export function AppSidebar() {
               {previousAnalyses.map((analysis) => (
                 <SidebarMenuItem key={analysis.id}>
                   <SidebarMenuButton
-                    className="h-auto p-3 hover:bg-primary/5 border border-transparent hover:border-primary/20 rounded-lg"
+                    className="h-auto p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700 rounded-lg text-slate-200"
                     onClick={() => handleAnalysisClick(analysis.id)}
                   >
                     <div className="flex items-center w-full">
@@ -135,18 +135,18 @@ export function AppSidebar() {
                             <h4 className="text-sm font-medium truncate">
                               {analysis.title}
                             </h4>
-                            <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                            <ChevronRight className="w-4 h-4 text-slate-400 flex-shrink-0" />
                           </div>
                           
-                          <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                          <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
                             <span>{analysis.date}</span>
                             <span>{analysis.duration}</span>
                           </div>
                           
                           <div className="flex items-center justify-between">
                             <Badge 
-                              variant="outline" 
-                              className={`text-xs ${getStatusColor(analysis.status)}`}
+                              variant="outline"
+                              className={`text-xs border-slate-700 ${getStatusColor(analysis.status)}`}
                             >
                               {getStatusText(analysis.status)}
                             </Badge>

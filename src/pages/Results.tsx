@@ -161,12 +161,12 @@ const Results = () => {
         <AppSidebar />
         <SidebarInset className="flex-1">
           {/* Header with toggle */}
-          <header className="h-16 flex items-center border-b border-primary/20 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+          <header className="h-16 flex items-center border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-10">
             <div className="flex items-center gap-4 px-6">
-              <SidebarTrigger className="hover:bg-primary/10" />
+              <SidebarTrigger className="hover:bg-slate-800 text-slate-200" />
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-6 h-6 text-primary" />
-                <h1 className="text-xl font-bold text-gradient">Analysis Dashboard</h1>
+                <h1 className="text-xl font-bold text-slate-100">Analysis Dashboard</h1>
               </div>
             </div>
           </header>
