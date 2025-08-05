@@ -109,7 +109,7 @@ export function AppSidebar() {
                 {previousAnalyses.map((analysis) => (
                   <SidebarMenuItem key={analysis.id}>
                     <SidebarMenuButton
-                      className="h-auto p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700 rounded-lg text-slate-200"
+                      className="h-auto p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700 rounded-lg text-slate-200 hover:text-slate-200"
                       onClick={() => handleAnalysisClick(analysis.id)}
                     >
                       <div className="flex items-center w-full">
