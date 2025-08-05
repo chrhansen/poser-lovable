@@ -87,76 +87,77 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
   };
 
   return (
-    <Card className="w-full">
-      <CardContent className="p-8">
-        {!selectedVideo ? (
-          <div
-            className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
-              dragActive
-                ? "border-primary bg-primary/5"
-                : "border-muted-foreground/25 hover:border-primary/50"
-            }`}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
+    <div className="w-full">
+      {!selectedVideo ? (
+        <div
+          className={`border-2 border-dashed rounded-2xl p-8 md:p-12 text-center transition-all duration-200 ${
+            dragActive
+              ? "border-primary bg-primary/10 scale-[1.02]"
+              : "border-border hover:border-primary/50 hover:bg-card/50"
+          }`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+        >
+          <Upload className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-muted-foreground" />
+          <h3 className="text-lg md:text-xl font-semibold mb-2 text-foreground">
+            Drop your skiing video here
+          </h3>
+          <p className="text-muted-foreground mb-6 text-sm md:text-base">
+            Or click to browse your files
+          </p>
+          <p className="text-xs md:text-sm text-muted-foreground mb-6">
+            Supports MP4, MOV, AVI up to 500MB
+          </p>
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            size="lg"
+            className="px-8"
           >
-            <Upload className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-            <h3 className="text-xl font-semibold mb-2">Upload Your Skiing Video</h3>
-            <p className="text-muted-foreground mb-6">
-              Drag and drop your video here, or click to browse
-            </p>
-            <p className="text-sm text-muted-foreground mb-6">
-              Supports MP4, MOV, AVI up to 500MB
-            </p>
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              className="mx-auto"
-            >
-              Choose Video File
-            </Button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="video/*"
-              onChange={handleFileInput}
-              className="hidden"
+            Choose Video File
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="video/*"
+            onChange={handleFileInput}
+            className="hidden"
+          />
+        </div>
+      ) : (
+        <div className="space-y-6 bg-card/50 rounded-2xl p-6">
+          <div className="relative">
+            <video
+              src={videoPreview || ""}
+              controls
+              className="w-full max-h-64 rounded-xl bg-black"
             />
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="relative">
-              <video
-                src={videoPreview || ""}
-                controls
-                className="w-full max-h-64 rounded-lg"
-              />
-              <Button
-                variant="destructive"
-                size="icon"
-                className="absolute top-2 right-2"
-                onClick={removeVideo}
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            
-            <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
-              <Video className="w-5 h-5 text-primary" />
-              <div className="flex-1">
-                <p className="font-medium">{selectedVideo.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {(selectedVideo.size / (1024 * 1024)).toFixed(1)} MB
-                </p>
-              </div>
-            </div>
-
-            <Button onClick={handleUpload} className="w-full" size="lg">
-              Continue to Email Verification
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute top-3 right-3 bg-background/80 hover:bg-background"
+              onClick={removeVideo}
+            >
+              <X className="w-4 h-4" />
             </Button>
           </div>
-        )}
-      </CardContent>
-    </Card>
+          
+          <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-xl">
+            <Video className="w-5 h-5 text-primary" />
+            <div className="flex-1">
+              <p className="font-medium text-foreground">{selectedVideo.name}</p>
+              <p className="text-sm text-muted-foreground">
+                {(selectedVideo.size / (1024 * 1024)).toFixed(1)} MB
+              </p>
+            </div>
+          </div>
+
+          <Button onClick={handleUpload} className="w-full" size="lg">
+            Continue to Email Verification
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
