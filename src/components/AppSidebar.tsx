@@ -96,20 +96,10 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20 shadow-2xl shadow-black/20`} collapsible="icon">
-      <SidebarHeader className="p-4 border-b border-slate-800 bg-slate-900 flex items-center justify-between">
-        {!collapsed && (
-          <div>
-            <h2 className="text-lg font-semibold text-slate-100">Pose Analysis</h2>
-            <p className="text-sm text-slate-400">Previous analyses</p>
-          </div>
-        )}
-        <SidebarTrigger className="hover:bg-slate-800 text-slate-200 ml-auto" />
-      </SidebarHeader>
-
-      <SidebarContent className="bg-slate-900">
-        <SidebarGroup>
-          <SidebarGroupLabel className={`${collapsed ? "hidden" : ""} text-slate-300`}>
+    <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)]`} collapsible="icon">
+      <SidebarContent className="bg-slate-900 flex flex-col h-full">
+        <SidebarGroup className="flex-1">
+          <SidebarGroupLabel className={`${collapsed ? "hidden" : ""} text-slate-300 p-4`}>
             Recent Analyses
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -167,6 +157,10 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        
+        <div className="border-t border-slate-800 p-4">
+          <SidebarTrigger className="hover:bg-slate-800 text-slate-200 w-full justify-center" />
+        </div>
       </SidebarContent>
     </Sidebar>
   );
