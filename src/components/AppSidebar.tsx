@@ -95,7 +95,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800`} collapsible="icon">
+    <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20`} collapsible="icon">
       <SidebarHeader className="p-4 border-b border-slate-800 bg-slate-900">
         {!collapsed && (
           <div>

@@ -161,7 +161,7 @@ const Results = () => {
         <AppSidebar />
         <SidebarInset className="flex-1">
           {/* Header with toggle */}
-          <header className="h-16 flex items-center border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-10">
+          <header className="h-16 flex items-center border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-0">
             <div className="flex items-center gap-4 px-6">
               <SidebarTrigger className="hover:bg-slate-800 text-slate-200" />
               <div className="flex items-center gap-3">
