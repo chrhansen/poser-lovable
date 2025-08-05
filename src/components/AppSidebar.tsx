@@ -98,16 +98,6 @@ export function AppSidebar() {
   return (
     <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)]`} collapsible="icon">
       <div className="relative h-full">
-        {/* Toggle button positioned on the right edge */}
-        <div className="absolute top-4 -right-3 z-30">
-          <SidebarTrigger className="hover:bg-slate-800 text-slate-200 bg-slate-900 border border-slate-700 rounded-full p-2 shadow-lg">
-            {collapsed ? (
-              <ChevronRight className="w-4 h-4" />
-            ) : (
-              <ChevronLeft className="w-4 h-4" />
-            )}
-          </SidebarTrigger>
-        </div>
 
         <SidebarContent className="bg-slate-900 flex flex-col h-full">
           <SidebarGroup className="flex-1">
@@ -169,6 +159,19 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+          
+          {/* Divider and toggle button at bottom */}
+          <div className="border-t border-slate-800 p-4">
+            <div className="flex justify-end">
+              <SidebarTrigger className="hover:bg-slate-800 text-slate-200 bg-slate-900 border border-slate-700 rounded-full p-2 shadow-lg">
+                {collapsed ? (
+                  <ChevronRight className="w-4 h-4" />
+                ) : (
+                  <ChevronLeft className="w-4 h-4" />
+                )}
+              </SidebarTrigger>
+            </div>
+          </div>
         </SidebarContent>
       </div>
     </Sidebar>
