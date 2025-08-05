@@ -93,7 +93,7 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
           className={`relative border-2 border-dashed rounded-3xl p-8 md:p-12 text-center transition-all duration-500 group cursor-pointer ${
             dragActive
               ? "border-primary bg-primary/10 scale-[1.02] shadow-glow"
-              : "border-border bg-[hsl(var(--drop-zone))] hover:border-primary/50 hover:bg-primary/5 hover:shadow-elegant"
+              : "border-border bg-primary/5 hover:border-primary/50 hover:bg-primary/8 hover:shadow-elegant"
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
