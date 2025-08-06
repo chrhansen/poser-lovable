@@ -162,27 +162,19 @@ export const EmailVerification = ({ onVerified, onBack }: EmailVerificationProps
               )}
             </div>
 
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => setStep("email")}
-                className="flex-1"
-              >
-                Change Email
-              </Button>
-              <Button
-                onClick={handleVerifyCode}
-                disabled={isLoading || verificationCode.length !== 6}
-                className="flex-1"
-              >
-                {isLoading ? "Verifying..." : (
-                  <>
-                    <Check className="w-4 h-4 mr-2" />
-                    Verify & Process
-                  </>
-                )}
-              </Button>
-            </div>
+            <Button
+              onClick={handleVerifyCode}
+              disabled={isLoading || verificationCode.length !== 6}
+              className="w-full"
+              size="lg"
+            >
+              {isLoading ? "Verifying..." : (
+                <>
+                  <Check className="w-4 h-4 mr-2" />
+                  Verify & Process
+                </>
+              )}
+            </Button>
 
             <Button
               variant="ghost"
