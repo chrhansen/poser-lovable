@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Mail, Check } from "lucide-react";
+import { ArrowLeft, Mail, Check, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface EmailVerificationProps {
   onVerified: () => void;
@@ -16,7 +17,9 @@ export const EmailVerification = ({ onVerified, onBack }: EmailVerificationProps
   const [verificationCode, setVerificationCode] = useState("");
   const [step, setStep] = useState<"email" | "verify">("email");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSendCode = async () => {
     if (!email.includes("@")) {
@@ -43,25 +46,40 @@ export const EmailVerification = ({ onVerified, onBack }: EmailVerificationProps
 
   const handleVerifyCode = async () => {
     if (verificationCode.length !== 6) {
-      toast({
-        title: "Invalid code",
-        description: "Please enter the 6-digit verification code",
-        variant: "destructive",
-      });
+      setError("Please enter the 6-digit verification code");
       return;
     }
 
     setIsLoading(true);
+    setError("");
     
-    // Simulate API call to verify code
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setIsLoading(false);
-    toast({
-      title: "Email verified successfully",
-      description: "Your video is now being processed",
-    });
-    onVerified();
+    try {
+      // Simulate API call to verify code
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Simulate backend validation - for demo, codes starting with "1" are wrong
+      if (verificationCode.startsWith("1")) {
+        setError("Invalid verification code. Please check your email and try again.");
+        setIsLoading(false);
+        return;
+      }
+      
+      // Simulate successful verification with analysis ID
+      const analysisId = `analysis_${Date.now()}`;
+      
+      setIsLoading(false);
+      toast({
+        title: "Email verified successfully",
+        description: "Redirecting to your video analysis...",
+      });
+      
+      // Redirect to results page with analysis ID
+      navigate(`/results?id=${analysisId}`);
+      onVerified();
+    } catch (error) {
+      setIsLoading(false);
+      setError("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -128,11 +146,20 @@ export const EmailVerification = ({ onVerified, onBack }: EmailVerificationProps
                 type="text"
                 placeholder="123456"
                 value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                onChange={(e) => {
+                  setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6));
+                  setError(""); // Clear error when user types
+                }}
                 onKeyDown={(e) => e.key === "Enter" && handleVerifyCode()}
-                className="text-center text-lg tracking-widest"
+                className={`text-center text-lg tracking-widest ${error ? "border-destructive" : ""}`}
                 maxLength={6}
               />
+              {error && (
+                <div className="flex items-center gap-2 text-sm text-destructive">
+                  <AlertCircle className="w-4 h-4" />
+                  <span>{error}</span>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-3">
