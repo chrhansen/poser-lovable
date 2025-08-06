@@ -93,7 +93,7 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
           className={`relative border-2 border-dashed rounded-3xl p-8 md:p-12 text-center transition-all duration-500 group cursor-pointer shadow-elegant ${
             dragActive
               ? "border-primary bg-primary/10 scale-[1.02] shadow-glow"
-              : "border-primary/50 bg-primary/8 hover:border-primary hover:bg-primary/10 hover:shadow-glow"
+              : "border-primary bg-primary/10 hover:border-primary hover:shadow-glow"
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -133,7 +133,7 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
             )}
             
             <p className="text-xs md:text-sm text-muted-foreground/80 mt-4">
-              Supported formats: MP4, MKV, MOV, AVI • Max 500MB
+              Supported formats: MP4, MOV, AVI
             </p>
           </div>
           
