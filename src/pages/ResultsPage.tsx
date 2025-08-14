@@ -82,19 +82,6 @@ export default function ResultsPage() {
     return () => clearInterval(interval)
   }, [analysis?.status, id, token])
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    })
-  }
-
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -159,19 +146,23 @@ export default function ResultsPage() {
                   <BarChart3 className="h-4 w-4 text-primary" />
                   <div>
                     <p className="text-sm font-medium truncate">
-                      {item.title || `Skiing Session - ${formatDate(item.created_at).split(' ')[0]}`}
+                      Analysis {item.id.slice(-6)}
                     </p>
                     <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                      <span>{formatDate(item.created_at)}</span>
-                      {item.duration && <span>{formatDuration(item.duration)}</span>}
+                      <span>{item.status}</span>
+                      {item.analysis_results?.metrics?.total_frames && (
+                        <span>{item.analysis_results.metrics.total_frames} frames</span>
+                      )}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <span className={`text-xs font-medium ${getStatusColor(item.status)}`}>
-                    {item.status === 'complete' ? `${item.accuracy || 0}%` : item.status}
-                  </span>
                   {getStatusIcon(item.status)}
+                  <span className={`text-xs font-medium ${getStatusColor(item.status)}`}>
+                    {item.status === 'complete' && item.analysis_results?.metrics?.edge_similarity ? 
+                      `${(item.analysis_results.metrics.edge_similarity.mean * 100).toFixed(0)}%` : 
+                      item.status}
+                  </span>
                 </div>
               </div>
               {item.id === id && <ChevronRight className="h-4 w-4" />}

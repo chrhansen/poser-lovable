@@ -2,8 +2,8 @@ export interface AnalysisResult {
   id: string
   status: 'processing' | 'complete' | 'failed'
   user_id: string
-  created_at: string
-  updated_at: string
+  created_at?: string
+  updated_at?: string
   analysis_results?: {
     status?: string
     message?: string
@@ -27,10 +27,25 @@ export interface AnalysisResult {
 export interface AnalysisSummary {
   id: string
   status: string
-  created_at: string
-  title?: string
-  duration?: number
-  accuracy?: number
+  user_id: string
+  analysis_results?: {
+    status?: string
+    message?: string
+    outputs?: {
+      [key: string]: string
+    }
+    metrics?: {
+      edge_similarity?: {
+        mean: number
+        std: number
+        min: number
+        max: number
+        count: number
+      }
+      total_frames?: number
+    }
+  }
+  error_log?: string
 }
 
 export interface AuthResponse {
