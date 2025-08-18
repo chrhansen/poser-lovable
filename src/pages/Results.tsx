@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AppSidebar } from '@/components/AppSidebar';
-import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu } from 'lucide-react';
+import { VideoUpload } from '@/components/VideoUpload';
+import { EmailVerification } from '@/components/EmailVerification';
+import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus } from 'lucide-react';
 
 // Types for FastAPI integration
 interface AnalysisMetric {
@@ -100,6 +103,10 @@ const ArtifactItem = ({ artifact, onDownload }: {
 );
 
 const Results = () => {
+  const [showNewAnalysis, setShowNewAnalysis] = useState(false);
+  const [analysisStep, setAnalysisStep] = useState<"upload" | "verify">("upload");
+  const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
+
   // Mock data for demonstration - replace with FastAPI response
   const analysisData: AnalysisData = {
     stats: {
@@ -151,8 +158,20 @@ const Results = () => {
   };
 
   const handleAnalyzeAnother = () => {
-    // TODO: Navigate back to upload page
-    console.log('Analyze another video');
+    setShowNewAnalysis(true);
+    setAnalysisStep("upload");
+    setUploadedVideo(null);
+  };
+
+  const handleNewVideoUpload = (file: File) => {
+    setUploadedVideo(file);
+    setAnalysisStep("verify");
+  };
+
+  const handleEmailVerified = () => {
+    // TODO: Navigate to new analysis results
+    setShowNewAnalysis(false);
+    console.log('Email verified, starting new analysis for video:', uploadedVideo?.name);
   };
 
   return (
@@ -161,13 +180,41 @@ const Results = () => {
         <AppSidebar />
         <SidebarInset className="flex-1">
           {/* Header with toggle */}
-          <header className="h-16 flex items-center border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-0">
+          <header className="h-16 flex items-center justify-between border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-0">
             <div className="flex items-center gap-4 px-6">
               <SidebarTrigger className="hover:bg-slate-800 text-slate-200" />
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-6 h-6 text-primary" />
                 <h1 className="text-xl font-bold text-slate-100">Analysis Dashboard</h1>
               </div>
+            </div>
+            <div className="px-6">
+              <Dialog open={showNewAnalysis} onOpenChange={setShowNewAnalysis}>
+                <DialogTrigger asChild>
+                  <Button variant="default" size="sm" className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    New Analysis
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="text-gradient">Start New Analysis</DialogTitle>
+                    <DialogDescription>
+                      Upload a new skiing video for AI-powered pose analysis
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="mt-6">
+                    {analysisStep === "upload" ? (
+                      <VideoUpload onVideoUpload={handleNewVideoUpload} />
+                    ) : (
+                      <EmailVerification 
+                        onVerified={handleEmailVerified}
+                        onBack={() => setAnalysisStep("upload")}
+                      />
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </header>
 
