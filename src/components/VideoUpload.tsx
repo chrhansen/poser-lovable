@@ -6,9 +6,10 @@ import { useToast } from "@/hooks/use-toast";
 
 interface VideoUploadProps {
   onVideoUpload: (file: File) => void;
+  isSignedIn?: boolean;
 }
 
-export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
+export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadProps) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
@@ -180,7 +181,7 @@ export const VideoUpload = ({ onVideoUpload }: VideoUploadProps) => {
             className="w-full py-3 font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]" 
             size="lg"
           >
-            Continue to Email Verification
+            {isSignedIn ? "Analyze Video" : "Continue to Email Verification"}
           </Button>
         </div>
       )}

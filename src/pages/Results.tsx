@@ -165,7 +165,10 @@ const Results = () => {
 
   const handleNewVideoUpload = (file: File) => {
     setUploadedVideo(file);
+    // Skip email verification for signed-in users
     setAnalysisStep("verify");
+    // TODO: For signed-in users, directly start analysis
+    console.log('Starting analysis for signed-in user with video:', file.name);
   };
 
   const handleEmailVerified = () => {
@@ -205,7 +208,10 @@ const Results = () => {
                   </DialogHeader>
                   <div className="mt-6">
                     {analysisStep === "upload" ? (
-                      <VideoUpload onVideoUpload={handleNewVideoUpload} />
+                      <VideoUpload 
+                        onVideoUpload={handleNewVideoUpload} 
+                        isSignedIn={true}
+                      />
                     ) : (
                       <EmailVerification 
                         onVerified={handleEmailVerified}
