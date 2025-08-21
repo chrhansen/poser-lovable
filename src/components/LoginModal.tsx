@@ -43,8 +43,9 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }: LoginModalProps)
     });
   };
 
-  const handleVerifyCode = async () => {
-    if (verificationCode.length !== 6) {
+  const handleVerifyCode = async (codeToVerify?: string) => {
+    const codeValue = codeToVerify || verificationCode;
+    if (codeValue.length !== 6) {
       setError("Please enter the 6-digit login code");
       return;
     }
@@ -57,7 +58,7 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }: LoginModalProps)
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Simulate backend validation - for demo, codes starting with "1" are wrong
-      if (verificationCode.startsWith("1")) {
+      if (codeValue.startsWith("1")) {
         setError("Invalid login code. Please check your email and try again.");
         setIsLoading(false);
         return;
@@ -157,26 +158,26 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }: LoginModalProps)
                     setVerificationCode(newCode);
                     setError(""); // Clear error when user types
                     
-                    // Auto-submit when 6th digit is entered
-                    if (newCode.length === 6 && !isLoading) {
-                      handleVerifyCode();
-                    }
+                     // Auto-submit when 6th digit is entered
+                     if (newCode.length === 6 && !isLoading) {
+                       handleVerifyCode(newCode);
+                     }
                   }}
-                  onKeyDown={(e) => e.key === "Enter" && handleVerifyCode()}
-                  className={`text-center text-lg tracking-widest ${error ? "border-destructive" : ""}`}
-                  maxLength={6}
-                />
-                {error && (
-                  <div className="flex items-center gap-2 text-sm text-destructive">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>{error}</span>
-                  </div>
-                )}
-              </div>
+                   onKeyDown={(e) => e.key === "Enter" && handleVerifyCode()}
+                   className={`text-center text-lg tracking-widest ${error ? "border-destructive" : ""}`}
+                   maxLength={6}
+                 />
+                 {error && (
+                   <div className="flex items-center gap-2 text-sm text-destructive">
+                     <AlertCircle className="w-4 h-4" />
+                     <span>{error}</span>
+                   </div>
+                 )}
+               </div>
 
-              <Button
-                onClick={handleVerifyCode}
-                disabled={isLoading || verificationCode.length !== 6}
+               <Button
+                 onClick={() => handleVerifyCode()}
+                 disabled={isLoading || verificationCode.length !== 6}
                 className="w-full"
                 size="lg"
               >
