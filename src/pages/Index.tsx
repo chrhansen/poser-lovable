@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { VideoUpload } from "@/components/VideoUpload";
 import { EmailVerification } from "@/components/EmailVerification";
-import { Mountain, ChevronDown } from "lucide-react";
+import { Mountain, ChevronDown, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [step, setStep] = useState<"upload" | "verify">("upload");
@@ -37,6 +38,12 @@ const Index = () => {
             </div>
             <h1 className="text-xl font-semibold text-foreground tracking-tight">Poser</h1>
           </div>
+          <Link to="/results">
+            <Button variant="outline" className="flex items-center gap-2 hover:bg-accent/50 transition-all duration-300 hover:scale-105">
+              <BarChart3 className="w-4 h-4" />
+              View Dashboard
+            </Button>
+          </Link>
         </header>
 
         {/* Center Content */}
