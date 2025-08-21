@@ -153,8 +153,14 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }: LoginModalProps)
                   placeholder="123456"
                   value={verificationCode}
                   onChange={(e) => {
-                    setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6));
+                    const newCode = e.target.value.replace(/\D/g, "").slice(0, 6);
+                    setVerificationCode(newCode);
                     setError(""); // Clear error when user types
+                    
+                    // Auto-submit when 6th digit is entered
+                    if (newCode.length === 6 && !isLoading) {
+                      handleVerifyCode();
+                    }
                   }}
                   onKeyDown={(e) => e.key === "Enter" && handleVerifyCode()}
                   className={`text-center text-lg tracking-widest ${error ? "border-destructive" : ""}`}
