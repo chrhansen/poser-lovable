@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { VideoUpload } from "@/components/VideoUpload";
 import { EmailVerification } from "@/components/EmailVerification";
-import { Mountain, ChevronDown, BarChart3 } from "lucide-react";
+import { LoginModal } from "@/components/LoginModal";
+import { Mountain, ChevronDown, BarChart3, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const Index = () => {
   const [step, setStep] = useState<"upload" | "verify">("upload");
   const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Mock auth state - replace with your auth logic
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleVideoUpload = (file: File) => {
     setUploadedVideo(file);
@@ -17,6 +20,10 @@ const Index = () => {
   const handleEmailVerified = () => {
     // Here you would typically send the video to your FastAPI backend
     console.log("Email verified, processing video:", uploadedVideo?.name);
+  };
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
   };
 
   const scrollToInfo = () => {
@@ -38,12 +45,23 @@ const Index = () => {
             </div>
             <h1 className="text-xl font-semibold text-foreground tracking-tight">Poser</h1>
           </div>
-          <Link to="/results">
-            <Button variant="outline" className="flex items-center gap-2 hover:bg-accent/50 transition-all duration-300 hover:scale-105">
-              <BarChart3 className="w-4 h-4" />
-              View Dashboard
+          {isLoggedIn ? (
+            <Link to="/results">
+              <Button variant="outline" className="flex items-center gap-2 hover:bg-accent/50 transition-all duration-300 hover:scale-105">
+                <BarChart3 className="w-4 h-4" />
+                View Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <Button 
+              variant="outline" 
+              onClick={() => setShowLoginModal(true)}
+              className="flex items-center gap-2 hover:bg-accent/50 transition-all duration-300 hover:scale-105"
+            >
+              <LogIn className="w-4 h-4" />
+              Log In
             </Button>
-          </Link>
+          )}
         </header>
 
         {/* Center Content */}
@@ -146,6 +164,13 @@ const Index = () => {
       <footer className="text-center py-12 text-muted-foreground border-t border-border/50 bg-card/20">
         <p className="text-sm font-medium">© 2024 Poser.pro - Ski Pose Analysis</p>
       </footer>
+
+      {/* Login Modal */}
+      <LoginModal 
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </div>
   );
 };
