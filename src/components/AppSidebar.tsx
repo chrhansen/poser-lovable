@@ -101,9 +101,18 @@ export function AppSidebar() {
 
         <SidebarContent className="bg-slate-900 flex flex-col h-full">
           <SidebarGroup className="flex-1">
-            <SidebarGroupLabel className={`${collapsed ? "hidden" : ""} text-slate-300 p-4`}>
-              Recent Analyses
-            </SidebarGroupLabel>
+            <div className="flex items-center justify-between p-4">
+              <SidebarGroupLabel className={`${collapsed ? "hidden" : ""} text-slate-300`}>
+                Recent Analyses
+              </SidebarGroupLabel>
+              <SidebarTrigger className="hover:bg-slate-800 text-slate-200 bg-slate-900 border border-slate-700 rounded-full p-2 shadow-lg">
+                {collapsed ? (
+                  <ChevronRight className="w-4 h-4" />
+                ) : (
+                  <ChevronLeft className="w-4 h-4" />
+                )}
+              </SidebarTrigger>
+            </div>
             <SidebarGroupContent>
               <SidebarMenu>
                 {previousAnalyses.map((analysis) => (
@@ -159,19 +168,6 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-          
-          {/* Divider and toggle button at bottom */}
-          <div className="border-t border-slate-800 p-4">
-            <div className="flex justify-end">
-              <SidebarTrigger className="hover:bg-slate-800 text-slate-200 bg-slate-900 border border-slate-700 rounded-full p-2 shadow-lg">
-                {collapsed ? (
-                  <ChevronRight className="w-4 h-4" />
-                ) : (
-                  <ChevronLeft className="w-4 h-4" />
-                )}
-              </SidebarTrigger>
-            </div>
-          </div>
         </SidebarContent>
       </div>
     </Sidebar>
