@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { AppSidebar } from '@/components/AppSidebar';
 import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
+import { AnalysisProgress } from '@/components/AnalysisProgress';
 import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus } from 'lucide-react';
 
 // Types for FastAPI integration
@@ -106,6 +107,10 @@ const Results = () => {
   const [showNewAnalysis, setShowNewAnalysis] = useState(false);
   const [analysisStep, setAnalysisStep] = useState<"upload" | "verify">("upload");
   const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
+  const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
+  
+  // This would come from URL params or props in a real app
+  const analysisId = "sample-analysis-id";
 
   // Mock data for demonstration - replace with FastAPI response
   const analysisData: AnalysisData = {
@@ -225,40 +230,38 @@ const Results = () => {
           </header>
 
           <div className="container mx-auto px-6 py-8">
-            {/* Header */}
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <CheckCircle className="w-8 h-8 text-primary" />
-                <h2 className="text-3xl font-bold text-gradient">Analysis Complete</h2>
-              </div>
-              <p className="text-muted-foreground text-lg">
-                Your skiing video has been successfully analyzed. Review the results below.
-              </p>
-            </div>
+            {/* Progress or Complete Header */}
+            <AnalysisProgress 
+              analysisId={analysisId}
+              onComplete={() => setIsAnalysisComplete(true)}
+            />
 
-        {/* Stats Cards - Easy to add/remove */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <StatCard 
-            icon={Clock} 
-            label="Processing Time" 
-            value={analysisData.stats.processingTime} 
-          />
-          <StatCard 
-            icon={BarChart3} 
-            label="Total Frames" 
-            value={analysisData.stats.totalFrames.toLocaleString()} 
-          />
-          <StatCard 
-            icon={TrendingUp} 
-            label="Poses Detected" 
-            value={analysisData.stats.detectedPoses.toLocaleString()} 
-          />
-          <StatCard 
-            icon={CheckCircle} 
-            label="Accuracy" 
-            value={`${analysisData.stats.accuracy}%`} 
-          />
-        </div>
+            {/* Show results only when analysis is complete */}
+            {isAnalysisComplete && (
+              <>
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                  <StatCard 
+                    icon={Clock} 
+                    label="Processing Time" 
+                    value={analysisData.stats.processingTime} 
+                  />
+                  <StatCard 
+                    icon={BarChart3} 
+                    label="Total Frames" 
+                    value={analysisData.stats.totalFrames.toLocaleString()} 
+                  />
+                  <StatCard 
+                    icon={TrendingUp} 
+                    label="Poses Detected" 
+                    value={analysisData.stats.detectedPoses.toLocaleString()} 
+                  />
+                  <StatCard 
+                    icon={CheckCircle} 
+                    label="Accuracy" 
+                    value={`${analysisData.stats.accuracy}%`} 
+                  />
+                </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Video Player Section */}
@@ -365,8 +368,10 @@ const Results = () => {
                 Analyze Another Video
               </Button>
             </div>
-          </div>
-          </div>
+              </div>
+            </div>
+            </>
+            )}
           </div>
         </SidebarInset>
       </div>
