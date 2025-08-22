@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Loader2, CheckCircle } from 'lucide-react';
+import { Clock, Loader2, CheckCircle, Play } from 'lucide-react';
 
 interface AnalysisProgressData {
   status: 'processing' | 'complete' | 'error';
@@ -124,19 +124,77 @@ export const AnalysisProgress: React.FC<AnalysisProgressProps> = ({
             {progressData.totalSteps.map((step, index) => {
               const isCompleted = progressData.stepsCompleted.includes(step);
               const isCurrent = progressData.currentStep.toLowerCase().includes(step.toLowerCase());
+              const stepProgress = Math.min(((progressData.progress / 100) * progressData.totalSteps.length), index + 1) - index;
+              const clampedProgress = Math.max(0, Math.min(1, stepProgress)) * 100;
               
               return (
-                <div key={index} className="text-center">
-                  <Badge 
-                    variant={isCompleted ? "default" : isCurrent ? "secondary" : "outline"}
-                    className={`w-full justify-center text-xs py-2 ${
-                      isCompleted ? 'bg-green-600/20 text-green-400 border-green-600/30' :
-                      isCurrent ? 'bg-primary/20 text-primary border-primary/30' :
-                      'bg-slate-800/20 text-slate-400 border-slate-600/30'
-                    }`}
-                  >
-                    {step}
-                  </Badge>
+                <div key={index} className="flex flex-col items-center space-y-3">
+                  {/* Step Icon */}
+                  <div className={`relative flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 ${
+                    isCompleted ? 'bg-green-500/20 border-green-500 text-green-400' :
+                    isCurrent ? 'bg-primary/20 border-primary text-primary' :
+                    'bg-muted border-muted-foreground/30 text-muted-foreground'
+                  }`}>
+                    {isCompleted ? (
+                      <CheckCircle className="w-6 h-6" />
+                    ) : isCurrent ? (
+                      <Play className="w-5 h-5 animate-pulse" />
+                    ) : (
+                      <span className="text-sm font-semibold">{index + 1}</span>
+                    )}
+                    
+                    {/* Current step progress ring */}
+                    {isCurrent && (
+                      <div className="absolute inset-0 rounded-full">
+                        <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                          <circle
+                            cx="18"
+                            cy="18"
+                            r="16"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeOpacity="0.2"
+                          />
+                          <circle
+                            cx="18"
+                            cy="18"
+                            r="16"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeDasharray="100.531"
+                            strokeDashoffset={100.531 - (clampedProgress * 100.531) / 100}
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Step Label */}
+                  <div className="text-center">
+                    <p className={`text-sm font-medium transition-colors ${
+                      isCompleted ? 'text-green-400' :
+                      isCurrent ? 'text-primary' :
+                      'text-muted-foreground'
+                    }`}>
+                      {step}
+                    </p>
+                    {isCurrent && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {Math.round(clampedProgress)}% complete
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Connector Line */}
+                  {index < progressData.totalSteps.length - 1 && (
+                    <div className={`hidden md:block absolute left-1/2 top-6 w-full h-0.5 transform translate-x-6 transition-colors ${
+                      isCompleted ? 'bg-green-500' :
+                      'bg-muted-foreground/30'
+                    }`} />
+                  )}
                 </div>
               );
             })}
