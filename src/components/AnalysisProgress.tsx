@@ -29,11 +29,11 @@ export const AnalysisProgress: React.FC<AnalysisProgressProps> = ({
     estimatedTimeRemaining: 'Calculating...',
     stepsCompleted: [],
     totalSteps: [
-      'Video preprocessing',
+      'Video loading',
       'Pose detection',
-      'Angle analysis', 
-      'Performance metrics',
-      'Report generation'
+      'Temporal smoothing', 
+      'Metrics calculation',
+      'Output preparation'
     ]
   });
 
