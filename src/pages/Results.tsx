@@ -5,11 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { AppSidebar } from '@/components/AppSidebar';
 import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
-import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus } from 'lucide-react';
+import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2 } from 'lucide-react';
 
 // Types for FastAPI integration
 interface AnalysisMetric {
@@ -108,6 +109,7 @@ const Results = () => {
   const [analysisStep, setAnalysisStep] = useState<"upload" | "verify">("upload");
   const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
   // This would come from URL params or props in a real app
   const analysisId = "sample-analysis-id";
@@ -180,6 +182,26 @@ const Results = () => {
     // TODO: Navigate to new analysis results
     setShowNewAnalysis(false);
     console.log('Email verified, starting new analysis for video:', uploadedVideo?.name);
+  };
+
+  const handleDeleteAnalysis = async () => {
+    try {
+      // TODO: Implement API call to delete analysis
+      const response = await fetch(`/api/analysis/${analysisId}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        console.log('Analysis deleted successfully');
+        // TODO: Navigate back to dashboard or analyses list
+        // For now, just close the confirmation
+        setShowDeleteConfirm(false);
+      } else {
+        console.error('Failed to delete analysis');
+      }
+    } catch (error) {
+      console.error('Error deleting analysis:', error);
+    }
   };
 
   return (
@@ -367,6 +389,33 @@ const Results = () => {
               <Button variant="secondary" className="w-full" onClick={handleAnalyzeAnother}>
                 Analyze Another Video
               </Button>
+              
+              {/* Delete Analysis Button */}
+              <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="w-full text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Analysis
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Analysis</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete this analysis? This action cannot be undone and will permanently remove all associated data, files, and results.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={handleDeleteAnalysis}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Delete Analysis
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
               </div>
             </div>
