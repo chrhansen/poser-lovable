@@ -108,7 +108,7 @@ const Results = () => {
   const [showNewAnalysis, setShowNewAnalysis] = useState(false);
   const [analysisStep, setAnalysisStep] = useState<"upload" | "verify">("upload");
   const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
-  const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
+  const [isAnalysisComplete, setIsAnalysisComplete] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
   // This would come from URL params or props in a real app
