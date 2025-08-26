@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 interface PreviousAnalysis {
   id: string;
   title: string;
+  filename: string;
   date: string;
   duration: string;
   status: 'completed' | 'processing' | 'failed';
@@ -34,6 +35,7 @@ export function AppSidebar() {
     {
       id: 'failed-1',
       title: 'Skiing Session - Low Quality Video',
+      filename: 'ski_session_blurry.mp4',
       date: '2024-01-16',
       duration: '2:15',
       status: 'failed'
@@ -41,6 +43,7 @@ export function AppSidebar() {
     {
       id: '1',
       title: 'Skiing Session - Morning Run',
+      filename: 'morning_run_HD.mp4',
       date: '2024-01-15',
       duration: '3:45',
       status: 'completed',
@@ -49,6 +52,7 @@ export function AppSidebar() {
     {
       id: '2',
       title: 'Practice Session',
+      filename: 'practice_session_4K.mov',
       date: '2024-01-14',
       duration: '2:30',
       status: 'completed',
@@ -57,6 +61,7 @@ export function AppSidebar() {
     {
       id: '3',
       title: 'Competition Analysis',
+      filename: 'competition_final.mp4',
       date: '2024-01-12',
       duration: '5:12',
       status: 'completed',
@@ -65,6 +70,7 @@ export function AppSidebar() {
     {
       id: '4',
       title: 'Training Session',
+      filename: 'training_slow_mo.mov',
       date: '2024-01-10',
       duration: '4:20',
       status: 'completed',
@@ -73,6 +79,7 @@ export function AppSidebar() {
     {
       id: '5',
       title: 'Technique Review',
+      filename: 'technique_analysis.avi',
       date: '2024-01-08',
       duration: '1:55',
       status: 'processing'
@@ -150,7 +157,7 @@ export function AppSidebar() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1">
                               <h4 className="text-sm font-medium truncate">
-                                {analysis.title}
+                                {analysis.filename}
                               </h4>
                               <ChevronRight className="w-4 h-4 text-slate-400 flex-shrink-0" />
                             </div>

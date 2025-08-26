@@ -118,6 +118,9 @@ const Results = () => {
   const [failureReason, setFailureReason] = useState("The video processing encountered an unexpected error during pose detection. This could be due to poor video quality, insufficient lighting, or unsupported video format.");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
+  // Mock video filename - this would come from the API response
+  const videoFilename = isFailed ? 'ski_session_blurry.mp4' : 'morning_run_HD.mp4';
+  
   // This would come from URL params or props in a real app
   const analysisId = "sample-analysis-id";
 
@@ -220,10 +223,13 @@ const Results = () => {
           <header className="h-16 flex items-center justify-between border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-0">
             <div className="flex items-center gap-4 px-6">
               <SidebarTrigger className="hover:bg-slate-800 text-slate-200" />
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-6 h-6 text-primary" />
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-6 h-6 text-primary" />
+              <div>
                 <h1 className="text-xl font-bold text-slate-100">Analysis Dashboard</h1>
+                <p className="text-sm text-slate-400">{videoFilename}</p>
               </div>
+            </div>
             </div>
             <div className="px-6">
               <Dialog open={showNewAnalysis} onOpenChange={setShowNewAnalysis}>
@@ -273,7 +279,8 @@ const Results = () => {
                 <Card className="border-destructive/20 bg-destructive/5">
                   <CardContent className="p-12 text-center">
                     <XCircle className="w-20 h-20 text-destructive mx-auto mb-6" />
-                    <h2 className="text-2xl font-bold text-destructive mb-4">Analysis Failed</h2>
+                    <h2 className="text-2xl font-bold text-destructive mb-2">Analysis Failed</h2>
+                    <h3 className="text-lg font-medium text-foreground mb-4">{videoFilename}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed max-w-md mx-auto mb-8">
                       {failureReason}
                     </p>
