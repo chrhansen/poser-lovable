@@ -259,11 +259,13 @@ const Results = () => {
           </header>
 
           <div className="container mx-auto px-6 py-8">
-            {/* Progress or Complete Header */}
-            <AnalysisProgress 
-              analysisId={analysisId}
-              onComplete={() => setIsAnalysisComplete(true)}
-            />
+            {/* Progress bar - only show when not failed */}
+            {!isAnalysisFailed && (
+              <AnalysisProgress 
+                analysisId={analysisId}
+                onComplete={() => setIsAnalysisComplete(true)}
+              />
+            )}
 
             {/* Show failed analysis state */}
             {isAnalysisFailed && (
