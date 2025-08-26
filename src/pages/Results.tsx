@@ -284,10 +284,7 @@ const Results = () => {
                     <p className="text-muted-foreground text-sm leading-relaxed max-w-md mx-auto mb-8">
                       {failureReason}
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <Button variant="default" onClick={handleAnalyzeAnother}>
-                        Try Another Video
-                      </Button>
+                    <div className="flex justify-center">
                       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
                         <AlertDialogTrigger asChild>
                           <Button variant="outline" className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
