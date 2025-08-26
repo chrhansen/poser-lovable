@@ -108,8 +108,13 @@ const Results = () => {
   const [showNewAnalysis, setShowNewAnalysis] = useState(false);
   const [analysisStep, setAnalysisStep] = useState<"upload" | "verify">("upload");
   const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
-  const [isAnalysisComplete, setIsAnalysisComplete] = useState(true);
-  const [isAnalysisFailed, setIsAnalysisFailed] = useState(false);
+  
+  // Check URL params to determine if this should show a failed analysis
+  const urlParams = new URLSearchParams(window.location.search);
+  const isFailed = urlParams.get('failed') === 'true';
+  
+  const [isAnalysisComplete, setIsAnalysisComplete] = useState(!isFailed);
+  const [isAnalysisFailed, setIsAnalysisFailed] = useState(isFailed);
   const [failureReason, setFailureReason] = useState("The video processing encountered an unexpected error during pose detection. This could be due to poor video quality, insufficient lighting, or unsupported video format.");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   

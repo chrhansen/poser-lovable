@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, BarChart3, Play, ChevronRight, ChevronLeft, ChevronRightIcon } from 'lucide-react';
+import { Clock, BarChart3, Play, ChevronRight, ChevronLeft, ChevronRightIcon, XCircle } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -31,6 +31,13 @@ export function AppSidebar() {
 
   // Mock data for previous analyses - replace with FastAPI response
   const previousAnalyses: PreviousAnalysis[] = [
+    {
+      id: 'failed-1',
+      title: 'Skiing Session - Low Quality Video',
+      date: '2024-01-16',
+      duration: '2:15',
+      status: 'failed'
+    },
     {
       id: '1',
       title: 'Skiing Session - Morning Run',
@@ -73,8 +80,13 @@ export function AppSidebar() {
   ];
 
   const handleAnalysisClick = (analysisId: string) => {
-    // TODO: Navigate to specific analysis results
-    console.log('Loading analysis:', analysisId);
+    // Navigate to results page with analysis state
+    const analysis = previousAnalyses.find(a => a.id === analysisId);
+    if (analysis?.status === 'failed') {
+      window.location.href = '/results?failed=true';
+    } else {
+      window.location.href = '/results';
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -127,6 +139,8 @@ export function AppSidebar() {
                             <BarChart3 className="w-5 h-5 text-primary" />
                           ) : analysis.status === 'processing' ? (
                             <Clock className="w-5 h-5 text-yellow-600" />
+                          ) : analysis.status === 'failed' ? (
+                            <XCircle className="w-5 h-5 text-red-600" />
                           ) : (
                             <Play className="w-5 h-5 text-muted-foreground" />
                           )}
