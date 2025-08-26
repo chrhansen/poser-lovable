@@ -10,7 +10,7 @@ import { AppSidebar } from '@/components/AppSidebar';
 import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
-import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2 } from 'lucide-react';
+import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle } from 'lucide-react';
 
 // Types for FastAPI integration
 interface AnalysisMetric {
@@ -109,6 +109,8 @@ const Results = () => {
   const [analysisStep, setAnalysisStep] = useState<"upload" | "verify">("upload");
   const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(true);
+  const [isAnalysisFailed, setIsAnalysisFailed] = useState(false);
+  const [failureReason, setFailureReason] = useState("The video processing encountered an unexpected error during pose detection. This could be due to poor video quality, insufficient lighting, or unsupported video format.");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
   // This would come from URL params or props in a real app
@@ -258,8 +260,53 @@ const Results = () => {
               onComplete={() => setIsAnalysisComplete(true)}
             />
 
+            {/* Show failed analysis state */}
+            {isAnalysisFailed && (
+              <div className="max-w-2xl mx-auto">
+                <Card className="border-destructive/20 bg-destructive/5">
+                  <CardContent className="p-12 text-center">
+                    <XCircle className="w-20 h-20 text-destructive mx-auto mb-6" />
+                    <h2 className="text-2xl font-bold text-destructive mb-4">Analysis Failed</h2>
+                    <p className="text-muted-foreground text-sm leading-relaxed max-w-md mx-auto mb-8">
+                      {failureReason}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Button variant="default" onClick={handleAnalyzeAnother}>
+                        Try Another Video
+                      </Button>
+                      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete Analysis
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Analysis</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete this failed analysis? This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={handleDeleteAnalysis}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              Delete Analysis
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
             {/* Show results only when analysis is complete */}
-            {isAnalysisComplete && (
+            {isAnalysisComplete && !isAnalysisFailed && (
               <>
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
