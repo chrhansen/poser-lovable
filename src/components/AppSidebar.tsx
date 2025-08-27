@@ -120,7 +120,7 @@ export function AppSidebar() {
 
         <SidebarContent className="bg-slate-900 flex flex-col h-full">
           <SidebarGroup className="flex-1">
-            <div className="flex items-center justify-between p-4">
+            <div className={`${collapsed ? "flex justify-center p-2" : "flex items-center justify-between p-4"}`}>
               <SidebarGroupLabel className={`${collapsed ? "hidden" : ""} text-slate-300`}>
                 Recent Analyses
               </SidebarGroupLabel>
@@ -137,11 +137,11 @@ export function AppSidebar() {
                 {previousAnalyses.map((analysis) => (
                   <SidebarMenuItem key={analysis.id}>
                     <SidebarMenuButton
-                      className="h-auto p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700 rounded-lg text-slate-200 hover:text-slate-200"
+                      className={`h-auto p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700 rounded-lg text-slate-200 hover:text-slate-200 ${collapsed ? "flex justify-center" : ""}`}
                       onClick={() => handleAnalysisClick(analysis.id)}
                     >
                       <div className="flex items-center w-full">
-                        <div className="flex-shrink-0 mr-3">
+                        <div className={`flex-shrink-0 ${collapsed ? "" : "mr-3"}`}>
                           {analysis.status === 'completed' ? (
                             <BarChart3 className="w-5 h-5 text-primary" />
                           ) : analysis.status === 'processing' ? (
