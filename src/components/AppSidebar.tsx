@@ -14,6 +14,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Types for previous analyses
 interface PreviousAnalysis {
@@ -114,83 +115,128 @@ export function AppSidebar() {
     }
   };
 
-  return (
-    <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)]`} collapsible="icon">
-      <div className="relative h-full">
+  const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInHours / 24);
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    if (diffInDays === 1) return '1 day ago';
+    return `${diffInDays} days ago`;
+  };
 
-        <SidebarContent className="bg-slate-900 flex flex-col h-full">
-          <SidebarGroup className="flex-1">
-            <div className={`${collapsed ? "flex justify-center p-2" : "flex items-center justify-between p-4"}`}>
-              <SidebarGroupLabel className={`${collapsed ? "hidden" : ""} text-slate-300`}>
-                Recent Analyses
-              </SidebarGroupLabel>
-              <SidebarTrigger className="hover:bg-slate-800 text-slate-200 bg-slate-900 border border-slate-700 rounded-full p-2 shadow-lg">
-                {collapsed ? (
-                  <ChevronRight className="w-4 h-4" />
-                ) : (
-                  <ChevronLeft className="w-4 h-4" />
-                )}
-              </SidebarTrigger>
-            </div>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {previousAnalyses.map((analysis) => (
-                  <SidebarMenuItem key={analysis.id}>
-                    <SidebarMenuButton
-                      className={`h-auto p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700 rounded-lg text-slate-200 hover:text-slate-200 ${collapsed ? "flex justify-center" : ""}`}
-                      onClick={() => handleAnalysisClick(analysis.id)}
-                    >
-                      <div className="flex items-center w-full">
-                        <div className={`flex-shrink-0 ${collapsed ? "" : "mr-3"}`}>
-                          {analysis.status === 'completed' ? (
-                            <BarChart3 className="w-5 h-5 text-primary" />
-                          ) : analysis.status === 'processing' ? (
-                            <Clock className="w-5 h-5 text-yellow-600" />
-                          ) : analysis.status === 'failed' ? (
-                            <XCircle className="w-5 h-5 text-red-600" />
-                          ) : (
-                            <Play className="w-5 h-5 text-muted-foreground" />
-                          )}
-                        </div>
-                        
-                        {!collapsed && (
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <h4 className="text-sm font-medium truncate">
-                                {analysis.filename}
-                              </h4>
-                              <ChevronRight className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                            </div>
-                            
-                            <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
-                              <span>{analysis.date}</span>
-                              <span>{analysis.duration}</span>
-                            </div>
-                            
-                            <div className="flex items-center justify-between">
-                              <Badge 
-                                variant="outline"
-                                className={`text-xs border-slate-700 ${getStatusColor(analysis.status)}`}
-                              >
-                                {getStatusText(analysis.status)}
-                              </Badge>
-                              {analysis.accuracy && (
-                                <span className="text-xs font-medium text-primary">
-                                  {analysis.accuracy}%
-                                </span>
+  const getTooltipText = (analysis: PreviousAnalysis) => {
+    // Convert duration to seconds (assuming format is "mm:ss")
+    const [minutes, seconds] = analysis.duration.split(':').map(Number);
+    const totalSeconds = minutes * 60 + seconds;
+    const timeAgo = getTimeAgo(analysis.date);
+    return `${analysis.filename}, ${totalSeconds} seconds, ${timeAgo}`;
+  };
+
+  return (
+    <TooltipProvider>
+      <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)]`} collapsible="icon">
+        <div className="relative h-full">
+
+          <SidebarContent className="bg-slate-900 flex flex-col h-full">
+            <SidebarGroup className="flex-1">
+              <div className={`${collapsed ? "flex justify-center p-2" : "flex items-center justify-between p-4"}`}>
+                <SidebarGroupLabel className={`${collapsed ? "hidden" : ""} text-slate-300`}>
+                  Recent Analyses
+                </SidebarGroupLabel>
+                <SidebarTrigger className="hover:bg-slate-800 text-slate-200 bg-slate-900 border border-slate-700 rounded-full p-2 shadow-lg">
+                  {collapsed ? (
+                    <ChevronRight className="w-4 h-4" />
+                  ) : (
+                    <ChevronLeft className="w-4 h-4" />
+                  )}
+                </SidebarTrigger>
+              </div>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {previousAnalyses.map((analysis) => (
+                    <SidebarMenuItem key={analysis.id}>
+                      {collapsed ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <SidebarMenuButton
+                              className="h-auto p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700 rounded-lg text-slate-200 hover:text-slate-200 flex items-center justify-center w-full"
+                              onClick={() => handleAnalysisClick(analysis.id)}
+                            >
+                              {analysis.status === 'completed' ? (
+                                <BarChart3 className="w-5 h-5 text-primary" />
+                              ) : analysis.status === 'processing' ? (
+                                <Clock className="w-5 h-5 text-yellow-600" />
+                              ) : analysis.status === 'failed' ? (
+                                <XCircle className="w-5 h-5 text-red-600" />
+                              ) : (
+                                <Play className="w-5 h-5 text-muted-foreground" />
+                              )}
+                            </SidebarMenuButton>
+                          </TooltipTrigger>
+                          <TooltipContent side="right">
+                            <p>{getTooltipText(analysis)}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        <SidebarMenuButton
+                          className="h-auto p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700 rounded-lg text-slate-200 hover:text-slate-200"
+                          onClick={() => handleAnalysisClick(analysis.id)}
+                        >
+                          <div className="flex items-center w-full">
+                            <div className="flex-shrink-0 mr-3">
+                              {analysis.status === 'completed' ? (
+                                <BarChart3 className="w-5 h-5 text-primary" />
+                              ) : analysis.status === 'processing' ? (
+                                <Clock className="w-5 h-5 text-yellow-600" />
+                              ) : analysis.status === 'failed' ? (
+                                <XCircle className="w-5 h-5 text-red-600" />
+                              ) : (
+                                <Play className="w-5 h-5 text-muted-foreground" />
                               )}
                             </div>
+                            
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between mb-1">
+                                <h4 className="text-sm font-medium truncate">
+                                  {analysis.filename}
+                                </h4>
+                                <ChevronRight className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                              </div>
+                              
+                              <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                                <span>{analysis.date}</span>
+                                <span>{analysis.duration}</span>
+                              </div>
+                              
+                              <div className="flex items-center justify-between">
+                                <Badge 
+                                  variant="outline"
+                                  className={`text-xs border-slate-700 ${getStatusColor(analysis.status)}`}
+                                >
+                                  {getStatusText(analysis.status)}
+                                </Badge>
+                                {analysis.accuracy && (
+                                  <span className="text-xs font-medium text-primary">
+                                    {analysis.accuracy}%
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </div>
-    </Sidebar>
+                        </SidebarMenuButton>
+                      )}
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </div>
+      </Sidebar>
+    </TooltipProvider>
   );
 }
