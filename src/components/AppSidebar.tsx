@@ -128,12 +128,19 @@ export function AppSidebar() {
     return `${diffInDays} days ago`;
   };
 
-  const getTooltipText = (analysis: PreviousAnalysis) => {
+  const getTooltipContent = (analysis: PreviousAnalysis) => {
     // Convert duration to seconds (assuming format is "mm:ss")
     const [minutes, seconds] = analysis.duration.split(':').map(Number);
     const totalSeconds = minutes * 60 + seconds;
     const timeAgo = getTimeAgo(analysis.date);
-    return `${analysis.filename}, ${totalSeconds} seconds, ${timeAgo}`;
+    
+    return (
+      <div className="space-y-1">
+        <div className="font-medium text-sm">{analysis.filename}</div>
+        <div className="text-xs text-muted-foreground">{totalSeconds} seconds</div>
+        <div className="text-xs text-muted-foreground">{timeAgo}</div>
+      </div>
+    );
   };
 
   return (
@@ -178,7 +185,7 @@ export function AppSidebar() {
                             </SidebarMenuButton>
                           </TooltipTrigger>
                           <TooltipContent side="right">
-                            <p>{getTooltipText(analysis)}</p>
+                            {getTooltipContent(analysis)}
                           </TooltipContent>
                         </Tooltip>
                       ) : (
