@@ -54,12 +54,12 @@ const StatCard = ({ icon: Icon, label, value, className = "" }: {
   className?: string;
 }) => (
   <Card className={`border-primary/20 bg-primary/5 ${className}`}>
-    <CardContent className="p-6">
-      <div className="flex items-center gap-3">
-        <Icon className="w-8 h-8 text-primary" />
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="text-2xl font-bold text-gradient">{value}</p>
+    <CardContent className="p-4 sm:p-6">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary shrink-0" />
+        <div className="min-w-0">
+          <p className="text-xs sm:text-sm text-muted-foreground truncate">{label}</p>
+          <p className="text-lg sm:text-2xl font-bold text-gradient truncate">{value}</p>
         </div>
       </div>
     </CardContent>
@@ -221,17 +221,17 @@ const Results = () => {
         <SidebarInset className="flex-1">
           {/* Header with toggle */}
           <header className="h-16 flex items-center justify-between border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-0">
-            <div className="flex items-center gap-4 px-6">
-              <SidebarTrigger className="hover:bg-slate-800 text-slate-200" />
-            <div className="flex items-center gap-3">
-              <CheckCircle className="w-6 h-6 text-primary" />
-              <div>
-                <h1 className="text-xl font-bold text-slate-100">Analysis Dashboard</h1>
-                <p className="text-sm text-slate-400">{videoFilename}</p>
+            <div className="flex items-center gap-2 px-4 sm:gap-4 sm:px-6 min-w-0 flex-1">
+              <SidebarTrigger className="hover:bg-slate-800 text-slate-200 shrink-0" />
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" />
+                <div className="min-w-0">
+                  <h1 className="text-lg sm:text-xl font-bold text-slate-100 truncate">Analysis Dashboard</h1>
+                  <p className="text-xs sm:text-sm text-slate-400 truncate">{videoFilename}</p>
+                </div>
               </div>
             </div>
-            </div>
-            <div className="px-6">
+            <div className="px-2 sm:px-6 shrink-0">
               <Dialog open={showNewAnalysis} onOpenChange={setShowNewAnalysis}>
                 <DialogTrigger asChild>
                   <Button variant="default" size="sm" className="gap-2">
@@ -320,7 +320,7 @@ const Results = () => {
             {isAnalysisComplete && !isAnalysisFailed && (
               <>
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8">
                   <StatCard 
                     icon={Clock} 
                     label="Processing Time" 
@@ -343,7 +343,7 @@ const Results = () => {
                   />
                 </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
           {/* Video Player Section */}
           <div className="lg:col-span-2">
             <Card className="border-primary/20">
