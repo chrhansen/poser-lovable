@@ -215,7 +215,7 @@ const Results = () => {
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full bg-gradient-subtle">
         <AppSidebar />
         <SidebarInset className="flex-1">
@@ -223,12 +223,8 @@ const Results = () => {
           <header className="h-16 flex items-center justify-between border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-0">
             <div className="flex items-center gap-2 px-4 sm:gap-4 sm:px-6 min-w-0 flex-1">
               <SidebarTrigger className="hover:bg-slate-800 text-slate-200 shrink-0" />
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" />
-                <div className="min-w-0">
-                  <h1 className="text-lg sm:text-xl font-bold text-slate-100 truncate">Analysis Dashboard</h1>
-                  <p className="text-xs sm:text-sm text-slate-400 truncate">{videoFilename}</p>
-                </div>
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm text-slate-400 truncate">{videoFilename}</p>
               </div>
             </div>
             <div className="px-2 sm:px-6 shrink-0">
