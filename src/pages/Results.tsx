@@ -10,6 +10,8 @@ import { AppSidebar } from '@/components/AppSidebar';
 import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
 
 // Types for FastAPI integration
@@ -152,6 +154,33 @@ const Results = () => {
       strengths: "Maintained good knee angle range and demonstrated strong symmetry throughout the run.",
       improvements: "Consider working on hip flexion consistency during turns."
     }
+  };
+
+  // Mock edge similarity data for graph - this would come from FastAPI
+  const edgeSimilarityData = [
+    { time: 0, similarity: 85 },
+    { time: 1, similarity: 88 },
+    { time: 2, similarity: 92 },
+    { time: 3, similarity: 89 },
+    { time: 4, similarity: 94 },
+    { time: 5, similarity: 91 },
+    { time: 6, similarity: 87 },
+    { time: 7, similarity: 93 },
+    { time: 8, similarity: 96 },
+    { time: 9, similarity: 90 },
+    { time: 10, similarity: 88 },
+    { time: 11, similarity: 92 },
+    { time: 12, similarity: 95 },
+    { time: 13, similarity: 91 },
+    { time: 14, similarity: 89 },
+    { time: 15, similarity: 93 }
+  ];
+
+  const chartConfig = {
+    similarity: {
+      label: "Edge Similarity",
+      color: "hsl(var(--primary))",
+    },
   };
 
   // Handler functions for FastAPI integration
@@ -397,19 +426,60 @@ const Results = () => {
               </CardHeader>
             </Card>
 
-            {/* Performance Metrics */}
+            {/* Edge Similarity Graph */}
             {!theaterMode && (
               <Card className="mt-6 border-primary/20">
                 <CardHeader>
-                  <CardTitle>Performance Metrics</CardTitle>
-                  <CardDescription>Key measurements from your skiing technique</CardDescription>
+                  <CardTitle>Edge Similarity Analysis</CardTitle>
+                  <CardDescription>Edge similarity percentage throughout the video timeline</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {analysisData.metrics.map((metric, index) => (
-                      <MetricCard key={index} metric={metric} />
-                    ))}
-                  </div>
+                  <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                    <AreaChart
+                      data={edgeSimilarityData}
+                      margin={{
+                        left: 12,
+                        right: 12,
+                        top: 12,
+                        bottom: 12,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                      <XAxis 
+                        dataKey="time" 
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        tickFormatter={(value) => `${value}s`}
+                      />
+                      <YAxis
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        domain={[0, 100]}
+                        tickFormatter={(value) => `${value}%`}
+                      />
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent 
+                          indicator="line"
+                          labelFormatter={(value) => `Time: ${value}s`}
+                          formatter={(value, name) => [
+                            `${value}%`,
+                            chartConfig[name as keyof typeof chartConfig]?.label || name,
+                          ]}
+                        />}
+                      />
+                      <Area
+                        dataKey="similarity"
+                        type="monotone"
+                        fill="hsl(var(--primary))"
+                        fillOpacity={0.4}
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2}
+                      />
+                    </AreaChart>
+                  </ChartContainer>
                 </CardContent>
               </Card>
             )}
