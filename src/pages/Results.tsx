@@ -10,7 +10,7 @@ import { AppSidebar } from '@/components/AppSidebar';
 import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
-import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle } from 'lucide-react';
+import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
 
 // Types for FastAPI integration
 interface AnalysisMetric {
@@ -108,6 +108,7 @@ const Results = () => {
   const [showNewAnalysis, setShowNewAnalysis] = useState(false);
   const [analysisStep, setAnalysisStep] = useState<"upload" | "verify">("upload");
   const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
+  const [theaterMode, setTheaterMode] = useState(false);
   
   // Check URL params to determine if this should show a failed analysis
   const urlParams = new URLSearchParams(window.location.search);
@@ -157,6 +158,15 @@ const Results = () => {
   const handleVideoPlay = () => {
     // TODO: Implement video playback logic
     console.log('Playing video:', analysisData.videoUrl);
+  };
+
+  const handleVideoDownload = () => {
+    // TODO: Implement video download logic with FastAPI endpoint
+    console.log('Downloading processed video:', analysisData.videoUrl);
+  };
+
+  const handleToggleTheater = () => {
+    setTheaterMode(!theaterMode);
   };
 
   const handleArtifactDownload = (artifact: AnalysisArtifact) => {
@@ -339,21 +349,43 @@ const Results = () => {
                   />
                 </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
+        <div className={`grid grid-cols-1 gap-4 sm:gap-8 ${theaterMode ? '' : 'lg:grid-cols-3'}`}>
           {/* Video Player Section */}
-          <div className="lg:col-span-2">
+          <div className={theaterMode ? 'col-span-1' : 'lg:col-span-2'}>
             <Card className="border-primary/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Play className="w-5 h-5 text-primary" />
-                  Processed Video with Pose Overlays
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Play className="w-5 h-5 text-primary" />
+                    <CardTitle>Processed Video with Pose Overlays</CardTitle>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleVideoDownload}
+                      className="gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleToggleTheater}
+                      className="gap-2"
+                    >
+                      {theaterMode ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+                      {theaterMode ? 'Exit Theater' : 'Theater'}
+                    </Button>
+                  </div>
+                </div>
                 <CardDescription>
                   Your original video enhanced with AI-generated pose analysis overlays
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-primary/30">
+                <div className={`${theaterMode ? 'aspect-[21/9]' : 'aspect-video'} bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-primary/30`}>
                   <div className="text-center">
                     <Play className="w-16 h-16 text-primary mx-auto mb-4" />
                     <p className="text-lg font-semibold text-gradient mb-2">Processed Video</p>
@@ -368,111 +400,225 @@ const Results = () => {
             </Card>
 
             {/* Performance Metrics */}
-            <Card className="mt-6 border-primary/20">
-              <CardHeader>
-                <CardTitle>Performance Metrics</CardTitle>
-                <CardDescription>Key measurements from your skiing technique</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {analysisData.metrics.map((metric, index) => (
-                    <MetricCard key={index} metric={metric} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            {!theaterMode && (
+              <Card className="mt-6 border-primary/20">
+                <CardHeader>
+                  <CardTitle>Performance Metrics</CardTitle>
+                  <CardDescription>Key measurements from your skiing technique</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {analysisData.metrics.map((metric, index) => (
+                      <MetricCard key={index} metric={metric} />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Downloads Section */}
-          <div className="space-y-6">
-            <Card className="border-primary/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Download className="w-5 h-5 text-primary" />
-                  Download Results
-                </CardTitle>
-                <CardDescription>
-                  Get detailed analysis data and visualizations
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {analysisData.artifacts.map((artifact, index) => (
-                  <ArtifactItem 
-                    key={index} 
-                    artifact={artifact} 
-                    onDownload={handleArtifactDownload}
-                  />
-                ))}
-                
-                <div className="pt-4 border-t border-primary/20">
-                  <Button className="w-full" size="lg" onClick={handleDownloadAll}>
-                    <Download className="w-4 h-4 mr-2" />
-                    Download All Files
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Analysis Summary */}
-            <Card className="border-primary/20">
-              <CardHeader>
-                <CardTitle>Analysis Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {analysisData.summary && (
-                  <div className="text-sm text-muted-foreground">
-                    <p className="mb-2">
-                      <strong className="text-foreground">Overall Performance:</strong> {analysisData.summary.overall}
-                    </p>
-                    <p className="mb-2">
-                      <strong className="text-foreground">Key Strengths:</strong> {analysisData.summary.strengths}
-                    </p>
-                    <p>
-                      <strong className="text-foreground">Areas for Improvement:</strong> {analysisData.summary.improvements}
-                    </p>
+          {!theaterMode && (
+            <div className="space-y-6">
+              <Card className="border-primary/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Download className="w-5 h-5 text-primary" />
+                    Download Results
+                  </CardTitle>
+                  <CardDescription>
+                    Get detailed analysis data and visualizations
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {analysisData.artifacts.map((artifact, index) => (
+                    <ArtifactItem 
+                      key={index} 
+                      artifact={artifact} 
+                      onDownload={handleArtifactDownload}
+                    />
+                  ))}
+                  
+                  <div className="pt-4 border-t border-primary/20">
+                    <Button className="w-full" size="lg" onClick={handleDownloadAll}>
+                      <Download className="w-4 h-4 mr-2" />
+                      Download All Files
+                    </Button>
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              <Button variant="outline" className="w-full" onClick={handleShare}>
-                Share Results
-              </Button>
-              <Button variant="secondary" className="w-full" onClick={handleAnalyzeAnother}>
-                Analyze Another Video
-              </Button>
-              
-              {/* Delete Analysis Button */}
-              <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" className="w-full text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete Analysis
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Analysis</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to delete this analysis? This action cannot be undone and will permanently remove all associated data, files, and results.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
-                      onClick={handleDeleteAnalysis}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
+              {/* Analysis Summary */}
+              <Card className="border-primary/20">
+                <CardHeader>
+                  <CardTitle>Analysis Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {analysisData.summary && (
+                    <div className="text-sm text-muted-foreground">
+                      <p className="mb-2">
+                        <strong className="text-foreground">Overall Performance:</strong> {analysisData.summary.overall}
+                      </p>
+                      <p className="mb-2">
+                        <strong className="text-foreground">Key Strengths:</strong> {analysisData.summary.strengths}
+                      </p>
+                      <p>
+                        <strong className="text-foreground">Areas for Improvement:</strong> {analysisData.summary.improvements}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                <Button variant="outline" className="w-full" onClick={handleShare}>
+                  Share Results
+                </Button>
+                <Button variant="secondary" className="w-full" onClick={handleAnalyzeAnother}>
+                  Analyze Another Video
+                </Button>
+                
+                {/* Delete Analysis Button */}
+                <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="w-full text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
+                      <Trash2 className="w-4 h-4 mr-2" />
                       Delete Analysis
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Analysis</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete this analysis? This action cannot be undone and will permanently remove all associated data, files, and results.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleDeleteAnalysis}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        Delete Analysis
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </div>
+          )}
+
+          {/* Theater Mode: Show Performance Metrics and Downloads below video */}
+          {theaterMode && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mt-8">
+              {/* Performance Metrics */}
+              <Card className="border-primary/20">
+                <CardHeader>
+                  <CardTitle>Performance Metrics</CardTitle>
+                  <CardDescription>Key measurements from your skiing technique</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 gap-6">
+                    {analysisData.metrics.map((metric, index) => (
+                      <MetricCard key={index} metric={metric} />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Downloads and Summary Section */}
+              <div className="space-y-6">
+                <Card className="border-primary/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Download className="w-5 h-5 text-primary" />
+                      Download Results
+                    </CardTitle>
+                    <CardDescription>
+                      Get detailed analysis data and visualizations
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {analysisData.artifacts.map((artifact, index) => (
+                      <ArtifactItem 
+                        key={index} 
+                        artifact={artifact} 
+                        onDownload={handleArtifactDownload}
+                      />
+                    ))}
+                    
+                    <div className="pt-4 border-t border-primary/20">
+                      <Button className="w-full" size="lg" onClick={handleDownloadAll}>
+                        <Download className="w-4 h-4 mr-2" />
+                        Download All Files
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Analysis Summary */}
+                <Card className="border-primary/20">
+                  <CardHeader>
+                    <CardTitle>Analysis Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {analysisData.summary && (
+                      <div className="text-sm text-muted-foreground">
+                        <p className="mb-2">
+                          <strong className="text-foreground">Overall Performance:</strong> {analysisData.summary.overall}
+                        </p>
+                        <p className="mb-2">
+                          <strong className="text-foreground">Key Strengths:</strong> {analysisData.summary.strengths}
+                        </p>
+                        <p>
+                          <strong className="text-foreground">Areas for Improvement:</strong> {analysisData.summary.improvements}
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Action Buttons */}
+                <div className="space-y-3">
+                  <Button variant="outline" className="w-full" onClick={handleShare}>
+                    Share Results
+                  </Button>
+                  <Button variant="secondary" className="w-full" onClick={handleAnalyzeAnother}>
+                    Analyze Another Video
+                  </Button>
+                  
+                  {/* Delete Analysis Button */}
+                  <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" className="w-full text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Analysis
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Analysis</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete this analysis? This action cannot be undone and will permanently remove all associated data, files, and results.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={handleDeleteAnalysis}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Delete Analysis
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
             </>
             )}
           </div>
