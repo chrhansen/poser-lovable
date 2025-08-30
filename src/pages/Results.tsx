@@ -354,7 +354,7 @@ const Results = () => {
           <div className={theaterMode ? 'col-span-1' : 'lg:col-span-2'}>
             <Card className="border-primary/20">
               <CardContent className="p-0">
-                <div className={`${theaterMode ? 'aspect-[21/9]' : 'aspect-video'} bg-muted rounded-t-lg flex items-center justify-center border-2 border-dashed border-primary/30`}>
+                <div className={`${theaterMode ? 'aspect-[21/9]' : 'aspect-video'} bg-muted rounded-t-lg flex items-center justify-center`}>
                   <div className="text-center">
                     <p className="text-lg font-semibold text-gradient mb-2">Processed Video</p>
                     <p className="text-sm text-muted-foreground">Click to play your analyzed skiing video</p>
@@ -387,7 +387,7 @@ const Results = () => {
                       className="gap-2"
                     >
                       {theaterMode ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
-                      {theaterMode ? 'Exit Theater' : 'Theater'}
+                      {theaterMode ? 'Default View' : 'Theater Mode'}
                     </Button>
                   </div>
                 </div>
