@@ -384,7 +384,7 @@ const Results = () => {
                       variant="outline" 
                       size="sm"
                       onClick={handleToggleTheater}
-                      className="gap-2"
+                      className="gap-2 hidden md:flex"
                     >
                       {theaterMode ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
                       {theaterMode ? 'Default View' : 'Theater Mode'}
