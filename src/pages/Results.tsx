@@ -162,10 +162,10 @@ const Results = () => {
     { time: 0, similarity: 85 },
     { time: 1, similarity: 88 },
     { time: 2, similarity: 92 },
-    // Missing data from 3-5 seconds (example of data gap)
-    { time: 6, similarity: 87 },
-    { time: 7, similarity: 93 },
-    { time: 8, similarity: 96 },
+    { time: 3, similarity: 89 },
+    { time: 4, similarity: 91 },
+    { time: 5, similarity: 94 },
+    // Missing data from 6-8 seconds (example of data gap)
     { time: 9, similarity: 90 },
     { time: 10, similarity: 88 },
     { time: 11, similarity: 92 },
