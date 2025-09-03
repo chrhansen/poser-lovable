@@ -157,13 +157,12 @@ const Results = () => {
   };
 
   // Mock edge similarity data for graph - this would come from FastAPI
+  // Sometimes data might be missing for certain time periods
   const edgeSimilarityData = [
     { time: 0, similarity: 85 },
     { time: 1, similarity: 88 },
     { time: 2, similarity: 92 },
-    { time: 3, similarity: 89 },
-    { time: 4, similarity: 94 },
-    { time: 5, similarity: 91 },
+    // Missing data from 3-5 seconds (example of data gap)
     { time: 6, similarity: 87 },
     { time: 7, similarity: 93 },
     { time: 8, similarity: 96 },
@@ -175,6 +174,11 @@ const Results = () => {
     { time: 14, similarity: 89 },
     { time: 15, similarity: 93 }
   ];
+
+  // Check if we have sufficient data
+  const hasInsufficientData = edgeSimilarityData.length < 5; // Less than 5 data points
+  const hasDataGaps = edgeSimilarityData.length > 0 && 
+    (edgeSimilarityData[edgeSimilarityData.length - 1].time - edgeSimilarityData[0].time + 1) > edgeSimilarityData.length;
 
   const chartConfig = {
     similarity: {
@@ -434,52 +438,85 @@ const Results = () => {
                   <CardDescription>Edge similarity percentage throughout the video timeline</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                    <AreaChart
-                      data={edgeSimilarityData}
-                      margin={{
-                        left: 12,
-                        right: 12,
-                        top: 12,
-                        bottom: 12,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                      <XAxis 
-                        dataKey="time" 
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={8}
-                        tickFormatter={(value) => `${value}s`}
-                      />
-                      <YAxis
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={8}
-                        domain={[0, 100]}
-                        tickFormatter={(value) => `${value}%`}
-                      />
-                      <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent 
-                          indicator="line"
-                          labelFormatter={(value) => `Time: ${value}s`}
-                          formatter={(value, name) => [
-                            `${value}%`,
-                            chartConfig[name as keyof typeof chartConfig]?.label || name,
-                          ]}
-                        />}
-                      />
-                      <Area
-                        dataKey="similarity"
-                        type="monotone"
-                        fill="hsl(var(--primary))"
-                        fillOpacity={0.4}
-                        stroke="hsl(var(--primary))"
-                        strokeWidth={2}
-                      />
-                    </AreaChart>
-                  </ChartContainer>
+                  {edgeSimilarityData.length === 0 ? (
+                    <div className="h-[300px] flex items-center justify-center">
+                      <div className="text-center">
+                        <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-lg font-medium text-muted-foreground mb-2">No Data Available</p>
+                        <p className="text-sm text-muted-foreground">
+                          Edge similarity data is not available for this video analysis.
+                        </p>
+                      </div>
+                    </div>
+                  ) : hasInsufficientData ? (
+                    <div className="h-[300px] flex items-center justify-center">
+                      <div className="text-center">
+                        <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-lg font-medium text-muted-foreground mb-2">Insufficient Data</p>
+                        <p className="text-sm text-muted-foreground">
+                          Not enough data points available to generate a meaningful graph.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {hasDataGaps && (
+                        <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                          <p className="text-sm text-yellow-700 dark:text-yellow-300 flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            Note: Data is missing for some time periods in this analysis.
+                          </p>
+                        </div>
+                      )}
+                      <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                        <AreaChart
+                          data={edgeSimilarityData}
+                          margin={{
+                            left: 12,
+                            right: 12,
+                            top: 12,
+                            bottom: 12,
+                          }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                          <XAxis 
+                            dataKey="time" 
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            tickFormatter={(value) => `${value}s`}
+                          />
+                          <YAxis
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            domain={[0, 100]}
+                            tickFormatter={(value) => `${value}%`}
+                          />
+                          <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent 
+                              indicator="line"
+                              labelFormatter={(value) => `Time: ${value}s`}
+                              formatter={(value, name) => [
+                                `${value}%`,
+                                chartConfig[name as keyof typeof chartConfig]?.label || name,
+                              ]}
+                            />}
+                          />
+                          <Area
+                            dataKey="similarity"
+                            type="monotone"
+                            fill="hsl(var(--primary))"
+                            fillOpacity={0.4}
+                            stroke="hsl(var(--primary))"
+                            strokeWidth={2}
+                            connectNulls={false}
+                          />
+                        </AreaChart>
+                      </ChartContainer>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             )}
