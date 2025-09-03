@@ -11,7 +11,7 @@ import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Line, LineChart, ReferenceLine, ReferenceArea } from 'recharts';
+import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
 
 // Types for FastAPI integration
@@ -157,15 +157,16 @@ const Results = () => {
   };
 
   // Mock edge similarity data for graph - this would come from FastAPI
-  // Sometimes data might be missing for certain time periods
   const edgeSimilarityData = [
     { time: 0, similarity: 85 },
     { time: 1, similarity: 88 },
     { time: 2, similarity: 92 },
     { time: 3, similarity: 89 },
-    { time: 4, similarity: 91 },
-    { time: 5, similarity: 94 },
-    // Missing data from 6-8 seconds (example of data gap)
+    { time: 4, similarity: 94 },
+    { time: 5, similarity: 91 },
+    { time: 6, similarity: 87 },
+    { time: 7, similarity: 93 },
+    { time: 8, similarity: 96 },
     { time: 9, similarity: 90 },
     { time: 10, similarity: 88 },
     { time: 11, similarity: 92 },
@@ -174,79 +175,6 @@ const Results = () => {
     { time: 14, similarity: 89 },
     { time: 15, similarity: 93 }
   ];
-
-  // Check if we have sufficient data
-  const hasInsufficientData = edgeSimilarityData.length < 5; // Less than 5 data points
-  const hasDataGaps = edgeSimilarityData.length > 0 && 
-    (edgeSimilarityData[edgeSimilarityData.length - 1].time - edgeSimilarityData[0].time + 1) > edgeSimilarityData.length;
-
-  // Process data to identify segments and missing ranges
-  const processDataForGaps = (data: Array<{time: number, similarity: number}>) => {
-    if (data.length === 0) return { 
-      segments: [], 
-      missingRanges: [], 
-      processedData: [] 
-    };
-    
-    const segments: Array<Array<{time: number, similarity: number}>> = [];
-    const missingRanges: Array<{start: number, end: number}> = [];
-    
-    // Create complete data array with nulls for missing periods
-    const processedData: Array<{time: number, similarity: number | null}> = [];
-    
-    // Find the full time range
-    const minTime = data[0].time;
-    const maxTime = data[data.length - 1].time;
-    
-    // Create a map of existing data points
-    const dataMap = new Map();
-    data.forEach(point => dataMap.set(point.time, point.similarity));
-    
-    let currentSegment: Array<{time: number, similarity: number}> = [];
-    
-    // Fill in the complete timeline
-    for (let time = minTime; time <= maxTime; time++) {
-      if (dataMap.has(time)) {
-        const similarity = dataMap.get(time);
-        processedData.push({ time, similarity });
-        currentSegment.push({ time, similarity });
-      } else {
-        // Missing data point - add null to break the line
-        processedData.push({ time, similarity: null });
-        
-        // End current segment if it has data
-        if (currentSegment.length > 0) {
-          segments.push([...currentSegment]);
-          currentSegment = [];
-        }
-        
-        // Find the range of missing data
-        let endTime = time;
-        while (endTime <= maxTime && !dataMap.has(endTime)) {
-          endTime++;
-        }
-        
-        if (time < endTime - 1) {
-          missingRanges.push({
-            start: time,
-            end: endTime - 1
-          });
-        }
-        
-        // Skip to end of missing range
-        time = endTime - 1;
-      }
-    }
-    
-    // Add the last segment if it has data
-    if (currentSegment.length > 0) {
-      segments.push(currentSegment);
-    }
-    
-    return { segments, missingRanges, processedData };
-  };
-
-  const { segments, missingRanges, processedData } = processDataForGaps(edgeSimilarityData);
 
   const chartConfig = {
     similarity: {
@@ -506,124 +434,52 @@ const Results = () => {
                   <CardDescription>Edge similarity percentage throughout the video timeline</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {edgeSimilarityData.length === 0 ? (
-                    <div className="h-[300px] flex items-center justify-center">
-                      <div className="text-center">
-                        <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                        <p className="text-lg font-medium text-muted-foreground mb-2">No Data Available</p>
-                        <p className="text-sm text-muted-foreground">
-                          Edge similarity data is not available for this video analysis.
-                        </p>
-                      </div>
-                    </div>
-                  ) : hasInsufficientData ? (
-                    <div className="h-[300px] flex items-center justify-center">
-                      <div className="text-center">
-                        <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                        <p className="text-lg font-medium text-muted-foreground mb-2">Insufficient Data</p>
-                        <p className="text-sm text-muted-foreground">
-                          Not enough data points available to generate a meaningful graph.
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      {hasDataGaps && (
-                        <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                          <p className="text-sm text-yellow-700 dark:text-yellow-300 flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            Note: Data is missing for some time periods in this analysis.
-                          </p>
-                        </div>
-                      )}
-                      <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart
-                            data={processedData}
-                            margin={{
-                              left: 12,
-                              right: 12,
-                              top: 12,
-                              bottom: 12,
-                            }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                            <XAxis 
-                              type="number"
-                              dataKey="time"
-                              domain={[0, 15]}
-                              tickLine={false}
-                              axisLine={false}
-                              tickMargin={8}
-                              tickFormatter={(value) => `${value}s`}
-                            />
-                            <YAxis
-                              tickLine={false}
-                              axisLine={false}
-                              tickMargin={8}
-                              domain={[0, 100]}
-                              tickFormatter={(value) => `${value}%`}
-                            />
-                            
-                            {/* Background areas for missing data */}
-                            {missingRanges.map((range, index) => (
-                              <ReferenceArea
-                                key={`missing-${index}`}
-                                x1={range.start}
-                                x2={range.end}
-                                fill="hsl(var(--muted))"
-                                fillOpacity={0.3}
-                                stroke="hsl(var(--muted-foreground))"
-                                strokeOpacity={0.2}
-                                strokeDasharray="2 2"
-                              />
-                            ))}
-                            
-                            <ChartTooltip
-                              cursor={false}
-                              content={<ChartTooltipContent 
-                                indicator="line"
-                                labelFormatter={(value) => `Time: ${value}s`}
-                                formatter={(value, name) => [
-                                  value ? `${value}%` : 'No data',
-                                  chartConfig[name as keyof typeof chartConfig]?.label || name,
-                                ]}
-                              />}
-                            />
-                            
-                            <Area
-                              dataKey="similarity"
-                              type="monotone"
-                              fill="hsl(var(--primary))"
-                              fillOpacity={0.4}
-                              stroke="hsl(var(--primary))"
-                              strokeWidth={2}
-                              connectNulls={false}
-                              dot={{
-                                fill: "hsl(var(--primary))",
-                                strokeWidth: 2,
-                                r: 3,
-                              }}
-                            />
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      </ChartContainer>
-                      
-                      {/* Legend for missing data */}
-                      {missingRanges.length > 0 && (
-                        <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-2 bg-primary rounded"></div>
-                            <span>Edge Similarity</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-2 bg-muted border border-dashed border-muted-foreground rounded"></div>
-                            <span>Missing Data</span>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
+                  <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                    <AreaChart
+                      data={edgeSimilarityData}
+                      margin={{
+                        left: 12,
+                        right: 12,
+                        top: 12,
+                        bottom: 12,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                      <XAxis 
+                        dataKey="time" 
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        tickFormatter={(value) => `${value}s`}
+                      />
+                      <YAxis
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        domain={[0, 100]}
+                        tickFormatter={(value) => `${value}%`}
+                      />
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent 
+                          indicator="line"
+                          labelFormatter={(value) => `Time: ${value}s`}
+                          formatter={(value, name) => [
+                            `${value}%`,
+                            chartConfig[name as keyof typeof chartConfig]?.label || name,
+                          ]}
+                        />}
+                      />
+                      <Area
+                        dataKey="similarity"
+                        type="monotone"
+                        fill="hsl(var(--primary))"
+                        fillOpacity={0.4}
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2}
+                      />
+                    </AreaChart>
+                  </ChartContainer>
                 </CardContent>
               </Card>
             )}
