@@ -11,8 +11,8 @@ import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
-import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
+import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Dot } from 'recharts';
+import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize, ArrowLeft, ArrowRight } from 'lucide-react';
 
 // Types for FastAPI integration
 interface AnalysisMetric {
@@ -174,6 +174,16 @@ const Results = () => {
     { time: 13, similarity: 91 },
     { time: 14, similarity: 89 },
     { time: 15, similarity: 93 }
+  ];
+
+  // Mock turn indicator data - this would come from FastAPI
+  const turnIndicators = [
+    { time: 2, type: 'left' as const },
+    { time: 4, type: 'right' as const },
+    { time: 7, type: 'left' as const },
+    { time: 9, type: 'right' as const },
+    { time: 12, type: 'left' as const },
+    { time: 14, type: 'right' as const }
   ];
 
   const chartConfig = {
@@ -431,55 +441,117 @@ const Results = () => {
               <Card className="mt-6 border-primary/20">
                 <CardHeader>
                   <CardTitle>Edge Similarity Analysis</CardTitle>
-                  <CardDescription>Edge similarity percentage throughout the video timeline</CardDescription>
+                  <CardDescription>
+                    Edge similarity percentage throughout the video timeline with turn indicators
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                    <AreaChart
-                      data={edgeSimilarityData}
-                      margin={{
-                        left: 12,
-                        right: 12,
-                        top: 12,
-                        bottom: 12,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                      <XAxis 
-                        dataKey="time" 
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={8}
-                        tickFormatter={(value) => `${value}s`}
-                      />
-                      <YAxis
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={8}
-                        domain={[0, 100]}
-                        tickFormatter={(value) => `${value}%`}
-                      />
-                      <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent 
-                          indicator="line"
-                          labelFormatter={(value) => `Time: ${value}s`}
-                          formatter={(value, name) => [
-                            `${value}%`,
-                            chartConfig[name as keyof typeof chartConfig]?.label || name,
-                          ]}
-                        />}
-                      />
-                      <Area
-                        dataKey="similarity"
-                        type="monotone"
-                        fill="hsl(var(--primary))"
-                        fillOpacity={0.4}
-                        stroke="hsl(var(--primary))"
-                        strokeWidth={2}
-                      />
-                    </AreaChart>
-                  </ChartContainer>
+                  <div className="mb-4 flex items-center gap-4 text-sm">
+                    <div className="flex items-center gap-2">
+                      <ArrowLeft className="w-4 h-4 text-blue-500" />
+                      <span className="text-muted-foreground">Left Turn</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <ArrowRight className="w-4 h-4 text-orange-500" />
+                      <span className="text-muted-foreground">Right Turn</span>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                      <AreaChart
+                        data={edgeSimilarityData}
+                        margin={{
+                          left: 12,
+                          right: 12,
+                          top: 40,
+                          bottom: 12,
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                        <XAxis 
+                          dataKey="time" 
+                          tickLine={false}
+                          axisLine={false}
+                          tickMargin={8}
+                          tickFormatter={(value) => `${value}s`}
+                        />
+                        <YAxis
+                          tickLine={false}
+                          axisLine={false}
+                          tickMargin={8}
+                          domain={[0, 100]}
+                          tickFormatter={(value) => `${value}%`}
+                        />
+                        <ChartTooltip
+                          cursor={false}
+                          content={<ChartTooltipContent 
+                            indicator="line"
+                            labelFormatter={(value) => {
+                              const turn = turnIndicators.find(t => t.time === value);
+                              return turn 
+                                ? `Time: ${value}s (${turn.type === 'left' ? 'Left' : 'Right'} Turn)`
+                                : `Time: ${value}s`;
+                            }}
+                            formatter={(value, name) => [
+                              `${value}%`,
+                              chartConfig[name as keyof typeof chartConfig]?.label || name,
+                            ]}
+                          />}
+                        />
+                        <Area
+                          dataKey="similarity"
+                          type="monotone"
+                          fill="hsl(var(--primary))"
+                          fillOpacity={0.4}
+                          stroke="hsl(var(--primary))"
+                          strokeWidth={2}
+                        />
+                        {/* Turn indicator reference lines */}
+                        {turnIndicators.map((turn, index) => (
+                          <ReferenceLine
+                            key={index}
+                            x={turn.time}
+                            stroke={turn.type === 'left' ? '#3b82f6' : '#f97316'}
+                            strokeWidth={2}
+                            strokeDasharray="4 4"
+                            opacity={0.7}
+                          />
+                        ))}
+                      </AreaChart>
+                    </ChartContainer>
+                    {/* Turn indicator overlays */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {turnIndicators.map((turn, index) => {
+                        // Calculate position based on time (approximate positioning)
+                        const leftPercent = ((turn.time / 15) * 100);
+                        return (
+                          <div
+                            key={index}
+                            className="absolute flex items-center justify-center"
+                            style={{
+                              left: `${leftPercent}%`,
+                              top: '20px',
+                              transform: 'translateX(-50%)',
+                            }}
+                          >
+                            <div className={`
+                              p-1.5 rounded-full shadow-lg border-2 bg-background
+                              ${turn.type === 'left' 
+                                ? 'border-blue-500 text-blue-500' 
+                                : 'border-orange-500 text-orange-500'
+                              }
+                            `}>
+                              {turn.type === 'left' ? (
+                                <ArrowLeft className="w-3 h-3" />
+                              ) : (
+                                <ArrowRight className="w-3 h-3" />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )}
