@@ -176,14 +176,14 @@ const Results = () => {
     { time: 15, similarity: 93 }
   ];
 
-  // Mock turn indicator data - this would come from FastAPI
+  // Mock turn indicator data with durations - this would come from FastAPI
   const turnIndicators = [
-    { time: 2, type: 'left' as const },
-    { time: 4, type: 'right' as const },
-    { time: 7, type: 'left' as const },
-    { time: 9, type: 'right' as const },
-    { time: 12, type: 'left' as const },
-    { time: 14, type: 'right' as const }
+    { startTime: 1.5, endTime: 3, type: 'left' as const },
+    { startTime: 4, endTime: 5.5, type: 'right' as const },
+    { startTime: 6.5, endTime: 8, type: 'left' as const },
+    { startTime: 9, endTime: 10.5, type: 'right' as const },
+    { startTime: 11.5, endTime: 13, type: 'left' as const },
+    { startTime: 14, endTime: 15.5, type: 'right' as const }
   ];
 
   const chartConfig = {
@@ -487,9 +487,11 @@ const Results = () => {
                           content={<ChartTooltipContent 
                             indicator="line"
                             labelFormatter={(value) => {
-                              const turn = turnIndicators.find(t => t.time === value);
+                              const turn = turnIndicators.find(t => 
+                                value >= t.startTime && value <= t.endTime
+                              );
                               return turn 
-                                ? `Time: ${value}s (${turn.type === 'left' ? 'Left' : 'Right'} Turn)`
+                                ? `Time: ${value}s (${turn.type === 'left' ? 'Left' : 'Right'} Turn - ${turn.endTime - turn.startTime}s duration)`
                                 : `Time: ${value}s`;
                             }}
                             formatter={(value, name) => [
@@ -506,46 +508,62 @@ const Results = () => {
                           stroke="hsl(var(--primary))"
                           strokeWidth={2}
                         />
-                        {/* Turn indicator reference lines */}
-                        {turnIndicators.map((turn, index) => (
-                          <ReferenceLine
-                            key={index}
-                            x={turn.time}
-                            stroke={turn.type === 'left' ? '#3b82f6' : '#f97316'}
-                            strokeWidth={2}
-                            strokeDasharray="4 4"
-                            opacity={0.7}
-                          />
-                        ))}
                       </AreaChart>
                     </ChartContainer>
-                    {/* Turn indicator overlays */}
-                    <div className="absolute inset-0 pointer-events-none">
+                    {/* Turn indicator duration bands */}
+                    <div className="absolute inset-0 pointer-events-none" style={{ top: '40px', bottom: '12px', left: '12px', right: '12px' }}>
                       {turnIndicators.map((turn, index) => {
-                        // Calculate position based on time (approximate positioning)
-                        const leftPercent = ((turn.time / 15) * 100);
+                        // Calculate position and width based on duration
+                        const startPercent = ((turn.startTime / 15) * 100);
+                        const endPercent = ((turn.endTime / 15) * 100);
+                        const widthPercent = endPercent - startPercent;
+                        
                         return (
-                          <div
-                            key={index}
-                            className="absolute flex items-center justify-center"
-                            style={{
-                              left: `${leftPercent}%`,
-                              top: '20px',
-                              transform: 'translateX(-50%)',
-                            }}
-                          >
-                            <div className={`
-                              p-1.5 rounded-full shadow-lg border-2 bg-background
-                              ${turn.type === 'left' 
-                                ? 'border-blue-500 text-blue-500' 
-                                : 'border-orange-500 text-orange-500'
-                              }
-                            `}>
-                              {turn.type === 'left' ? (
-                                <ArrowLeft className="w-3 h-3" />
-                              ) : (
-                                <ArrowRight className="w-3 h-3" />
-                              )}
+                          <div key={index}>
+                            {/* Duration band background */}
+                            <div
+                              className={`absolute h-full opacity-20 rounded-sm ${
+                                turn.type === 'left' ? 'bg-blue-500' : 'bg-orange-500'
+                              }`}
+                              style={{
+                                left: `${startPercent}%`,
+                                width: `${widthPercent}%`,
+                              }}
+                            />
+                            {/* Turn indicator icon at start */}
+                            <div
+                              className="absolute flex items-center justify-center"
+                              style={{
+                                left: `${startPercent}%`,
+                                top: '8px',
+                                transform: 'translateX(-50%)',
+                              }}
+                            >
+                              <div className={`
+                                p-1.5 rounded-full shadow-lg border-2 bg-background
+                                ${turn.type === 'left' 
+                                  ? 'border-blue-500 text-blue-500' 
+                                  : 'border-orange-500 text-orange-500'
+                                }
+                              `}>
+                                {turn.type === 'left' ? (
+                                  <ArrowLeft className="w-3 h-3" />
+                                ) : (
+                                  <ArrowRight className="w-3 h-3" />
+                                )}
+                              </div>
+                            </div>
+                            {/* Duration label */}
+                            <div
+                              className="absolute flex items-center justify-center text-xs font-medium"
+                              style={{
+                                left: `${startPercent + (widthPercent / 2)}%`,
+                                top: '32px',
+                                transform: 'translateX(-50%)',
+                                color: turn.type === 'left' ? '#3b82f6' : '#f97316'
+                              }}
+                            >
+                              {(turn.endTime - turn.startTime).toFixed(1)}s
                             </div>
                           </div>
                         );
