@@ -12,7 +12,7 @@ import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Dot } from 'recharts';
-import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
 
 // Types for FastAPI integration
 interface AnalysisMetric {
@@ -441,18 +441,15 @@ const Results = () => {
               <Card className="mt-6 border-primary/20">
                 <CardHeader>
                   <CardTitle>Edge Similarity Analysis</CardTitle>
-                  <CardDescription>
-                    Edge similarity percentage throughout the video timeline with turn indicators
-                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="mb-4 flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-2">
-                      <ArrowLeft className="w-4 h-4 text-blue-500" />
+                      <div className="w-4 h-4 rounded-full bg-blue-500" />
                       <span className="text-muted-foreground">Left Turn</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <ArrowRight className="w-4 h-4 text-orange-500" />
+                      <div className="w-4 h-4 rounded-full bg-orange-500" />
                       <span className="text-muted-foreground">Right Turn</span>
                     </div>
                   </div>
@@ -540,17 +537,12 @@ const Results = () => {
                               }}
                             >
                               <div className={`
-                                p-1.5 rounded-full shadow-lg border-2 bg-background
+                                w-3 h-3 rounded-full shadow-lg border-2 bg-background
                                 ${turn.type === 'left' 
-                                  ? 'border-blue-500 text-blue-500' 
-                                  : 'border-orange-500 text-orange-500'
+                                  ? 'border-blue-500 bg-blue-500' 
+                                  : 'border-orange-500 bg-orange-500'
                                 }
                               `}>
-                                {turn.type === 'left' ? (
-                                  <ArrowLeft className="w-3 h-3" />
-                                ) : (
-                                  <ArrowRight className="w-3 h-3" />
-                                )}
                               </div>
                             </div>
                             {/* Duration label */}
