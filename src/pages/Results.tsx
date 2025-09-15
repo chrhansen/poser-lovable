@@ -414,7 +414,7 @@ const Results = () => {
             </Card>
 
             {/* Edge Similarity Metrics */}
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="mt-6 grid grid-cols-2 gap-4">
               <Card className="border-primary/20 bg-primary/5">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center gap-3">
