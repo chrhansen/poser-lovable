@@ -578,56 +578,6 @@ const Results = () => {
           {/* Downloads Section */}
           {!theaterMode && (
             <div className="space-y-6">
-              <Card className="border-primary/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Download className="w-5 h-5 text-primary" />
-                    Download Results
-                  </CardTitle>
-                  <CardDescription>
-                    Get detailed analysis data and visualizations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {analysisData.artifacts.map((artifact, index) => (
-                    <ArtifactItem 
-                      key={index} 
-                      artifact={artifact} 
-                      onDownload={handleArtifactDownload}
-                    />
-                  ))}
-                  
-                  <div className="pt-4 border-t border-primary/20">
-                    <Button className="w-full" size="lg" onClick={handleDownloadAll}>
-                      <Download className="w-4 h-4 mr-2" />
-                      Download All Files
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Analysis Summary */}
-              <Card className="border-primary/20">
-                <CardHeader>
-                  <CardTitle>Analysis Summary</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {analysisData.summary && (
-                    <div className="text-sm text-muted-foreground">
-                      <p className="mb-2">
-                        <strong className="text-foreground">Overall Performance:</strong> {analysisData.summary.overall}
-                      </p>
-                      <p className="mb-2">
-                        <strong className="text-foreground">Key Strengths:</strong> {analysisData.summary.strengths}
-                      </p>
-                      <p>
-                        <strong className="text-foreground">Areas for Improvement:</strong> {analysisData.summary.improvements}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
               {/* Action Buttons */}
               <div className="space-y-3">
                 <Button variant="outline" className="w-full" onClick={handleShare}>
@@ -664,6 +614,35 @@ const Results = () => {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
+              
+              <Card className="border-primary/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Download className="w-5 h-5 text-primary" />
+                    Download Results
+                  </CardTitle>
+                  <CardDescription>
+                    Get detailed analysis data and visualizations
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {analysisData.artifacts.map((artifact, index) => (
+                    <ArtifactItem 
+                      key={index} 
+                      artifact={artifact} 
+                      onDownload={handleArtifactDownload}
+                    />
+                  ))}
+                  
+                  <div className="pt-4 border-t border-primary/20">
+                    <Button className="w-full" size="lg" onClick={handleDownloadAll}>
+                      <Download className="w-4 h-4 mr-2" />
+                      Download All Files
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
             </div>
           )}
 
