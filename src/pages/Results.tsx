@@ -583,9 +583,6 @@ const Results = () => {
                 <Button variant="outline" className="w-full" onClick={handleShare}>
                   Share Results
                 </Button>
-                <Button variant="secondary" className="w-full" onClick={handleAnalyzeAnother}>
-                  Analyze Another Video
-                </Button>
                 
                 {/* Delete Analysis Button */}
                 <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
