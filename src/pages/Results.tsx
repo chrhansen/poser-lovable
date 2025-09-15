@@ -364,29 +364,6 @@ const Results = () => {
             {/* Show results only when analysis is complete */}
             {isAnalysisComplete && !isAnalysisFailed && (
               <>
-                {/* Stats Cards */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8">
-                  <StatCard 
-                    icon={Clock} 
-                    label="Processing Time" 
-                    value={analysisData.stats.processingTime} 
-                  />
-                  <StatCard 
-                    icon={BarChart3} 
-                    label="Total Frames" 
-                    value={analysisData.stats.totalFrames.toLocaleString()} 
-                  />
-                  <StatCard 
-                    icon={TrendingUp} 
-                    label="Poses Detected" 
-                    value={analysisData.stats.detectedPoses.toLocaleString()} 
-                  />
-                  <StatCard 
-                    icon={CheckCircle} 
-                    label="Accuracy" 
-                    value={`${analysisData.stats.accuracy}%`} 
-                  />
-                </div>
 
         <div className={`grid grid-cols-1 gap-4 sm:gap-8 ${theaterMode ? '' : 'lg:grid-cols-3'}`}>
           {/* Video Player Section */}
@@ -435,6 +412,37 @@ const Results = () => {
                 </CardDescription>
               </CardHeader>
             </Card>
+
+            {/* Edge Similarity Metrics */}
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                      <div className="w-4 h-4 rounded-full bg-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Edge Similarity Left Turns</p>
+                      <p className="text-2xl font-bold text-gradient">87.4%</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-primary/20 bg-primary/5">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
+                      <div className="w-4 h-4 rounded-full bg-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Edge Similarity Right Turns</p>
+                      <p className="text-2xl font-bold text-gradient">91.2%</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* Edge Similarity Graph */}
             {!theaterMode && (
