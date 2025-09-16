@@ -422,8 +422,8 @@ const Results = () => {
                       <div className="w-4 h-4 rounded-full bg-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Edge Similarity Left Turns</p>
                       <p className="text-2xl font-bold text-gradient">87.4%</p>
+                      <p className="text-sm text-muted-foreground">Edge Similarity Left Turns</p>
                     </div>
                   </div>
                 </CardContent>
@@ -436,8 +436,8 @@ const Results = () => {
                       <div className="w-4 h-4 rounded-full bg-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Edge Similarity Right Turns</p>
                       <p className="text-2xl font-bold text-gradient">91.2%</p>
+                      <p className="text-sm text-muted-foreground">Edge Similarity Right Turns</p>
                     </div>
                   </div>
                 </CardContent>
