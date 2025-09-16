@@ -11,7 +11,7 @@ import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Dot, ComposedChart, Bar } from 'recharts';
+import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Dot, ComposedChart, ReferenceArea } from 'recharts';
 import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
 
 // Types for FastAPI integration
@@ -535,19 +535,19 @@ const Results = () => {
                             }}
                           />}
                         />
-                        {/* Bar charts for turn indicators */}
-                        <Bar
-                          dataKey="leftTurn"
-                          fill="#3b82f6"
-                          fillOpacity={0.3}
-                          stroke="none"
-                        />
-                        <Bar
-                          dataKey="rightTurn"
-                          fill="#f97316"
-                          fillOpacity={0.3}
-                          stroke="none"
-                        />
+                        {/* ReferenceArea components for turn indicators */}
+                        {turnIndicators.map((turn, index) => (
+                          <ReferenceArea
+                            key={index}
+                            x1={turn.startTime}
+                            x2={turn.endTime}
+                            y1={0}
+                            y2={100}
+                            fill={turn.type === 'left' ? '#3b82f6' : '#f97316'}
+                            fillOpacity={0.3}
+                            stroke="none"
+                          />
+                        ))}
                         {/* Area chart for edge similarity */}
                         <Area
                           dataKey="similarity"
