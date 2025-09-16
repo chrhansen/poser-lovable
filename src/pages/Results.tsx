@@ -448,7 +448,7 @@ const Results = () => {
             {!theaterMode && (
               <Card className="mt-6 border-primary/20">
                 <CardHeader>
-                  <CardTitle>Edge Similarity Analysis</CardTitle>
+                  <CardTitle>Edge Similarity</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="mb-4 flex items-center gap-4 text-sm">
