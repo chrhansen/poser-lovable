@@ -11,7 +11,7 @@ import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Dot } from 'recharts';
+import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Dot, ComposedChart, Bar } from 'recharts';
 import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
 
 // Types for FastAPI integration
@@ -186,10 +186,37 @@ const Results = () => {
     { startTime: 14, endTime: 15.5, type: 'right' as const }
   ];
 
+  // Combine data for ComposedChart - create data points every 0.1s for smooth bars
+  const combinedChartData = [];
+  for (let i = 0; i <= 150; i++) { // 0 to 15 seconds in 0.1s increments
+    const time = i / 10;
+    const dataPoint = edgeSimilarityData.find(d => d.time === Math.round(time));
+    
+    // Find active turn at this time point
+    const activeTurn = turnIndicators.find(turn => 
+      time >= turn.startTime && time <= turn.endTime
+    );
+    
+    combinedChartData.push({
+      time,
+      similarity: dataPoint?.similarity || 0,
+      leftTurn: activeTurn?.type === 'left' ? 100 : 0,
+      rightTurn: activeTurn?.type === 'right' ? 100 : 0,
+    });
+  }
+
   const chartConfig = {
     similarity: {
       label: "Edge Similarity",
       color: "hsl(var(--primary))",
+    },
+    leftTurn: {
+      label: "Left Turn",
+      color: "#3b82f6",
+    },
+    rightTurn: {
+      label: "Right Turn", 
+      color: "#f97316",
     },
   };
 
@@ -463,8 +490,8 @@ const Results = () => {
                   </div>
                   <div className="relative">
                     <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                      <AreaChart
-                        data={edgeSimilarityData}
+                      <ComposedChart
+                        data={combinedChartData}
                         margin={{
                           left: 12,
                           right: 12,
@@ -496,15 +523,32 @@ const Results = () => {
                                 value >= t.startTime && value <= t.endTime
                               );
                               return turn 
-                                ? `Time: ${value}s (${turn.type === 'left' ? 'Left' : 'Right'} Turn - ${turn.endTime - turn.startTime}s duration)`
+                                ? `Time: ${value}s (${turn.type === 'left' ? 'Left' : 'Right'} Turn - ${(turn.endTime - turn.startTime).toFixed(1)}s duration)`
                                 : `Time: ${value}s`;
                             }}
-                            formatter={(value, name) => [
-                              `${value}%`,
-                              chartConfig[name as keyof typeof chartConfig]?.label || name,
-                            ]}
+                            formatter={(value, name) => {
+                              if (name === 'leftTurn' || name === 'rightTurn') return null;
+                              return [
+                                `${value}%`,
+                                chartConfig[name as keyof typeof chartConfig]?.label || name,
+                              ];
+                            }}
                           />}
                         />
+                        {/* Bar charts for turn indicators */}
+                        <Bar
+                          dataKey="leftTurn"
+                          fill="#3b82f6"
+                          fillOpacity={0.3}
+                          stroke="none"
+                        />
+                        <Bar
+                          dataKey="rightTurn"
+                          fill="#f97316"
+                          fillOpacity={0.3}
+                          stroke="none"
+                        />
+                        {/* Area chart for edge similarity */}
                         <Area
                           dataKey="similarity"
                           type="monotone"
@@ -514,44 +558,8 @@ const Results = () => {
                           strokeWidth={2}
                           dot={false}
                         />
-                      </AreaChart>
+                      </ComposedChart>
                     </ChartContainer>
-                    {/* Turn indicator duration bands */}
-                    <div className="absolute inset-0 pointer-events-none" style={{ top: '40px', bottom: '12px', left: '12px', right: '12px' }}>
-                      {turnIndicators.map((turn, index) => {
-                        // Calculate position and width based on duration
-                        const startPercent = ((turn.startTime / 15) * 100);
-                        const endPercent = ((turn.endTime / 15) * 100);
-                        const widthPercent = endPercent - startPercent;
-                        
-                        return (
-                          <div key={index}>
-                            {/* Duration band background */}
-                            <div
-                              className={`absolute h-full opacity-20 rounded-sm ${
-                                turn.type === 'left' ? 'bg-blue-500' : 'bg-orange-500'
-                              }`}
-                              style={{
-                                left: `${startPercent}%`,
-                                width: `${widthPercent}%`,
-                              }}
-                            />
-                            {/* Duration label */}
-                            <div
-                              className="absolute flex items-center justify-center text-xs font-medium"
-                              style={{
-                                left: `${startPercent + (widthPercent / 2)}%`,
-                                top: '32px',
-                                transform: 'translateX(-50%)',
-                                color: turn.type === 'left' ? '#3b82f6' : '#f97316'
-                              }}
-                            >
-                              {(turn.endTime - turn.startTime).toFixed(1)}s
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
                   </div>
                 </CardContent>
               </Card>
