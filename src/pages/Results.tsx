@@ -512,6 +512,7 @@ const Results = () => {
                           fillOpacity={0.4}
                           stroke="hsl(var(--primary))"
                           strokeWidth={2}
+                          dot={false}
                         />
                       </AreaChart>
                     </ChartContainer>
