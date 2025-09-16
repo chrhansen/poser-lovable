@@ -454,11 +454,11 @@ const Results = () => {
                   <div className="mb-4 flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded-full bg-blue-500" />
-                      <span className="text-muted-foreground">Left Turn</span>
+                      <span className="text-muted-foreground">Left Turns</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 rounded-full bg-orange-500" />
-                      <span className="text-muted-foreground">Right Turn</span>
+                      <span className="text-muted-foreground">Right Turns</span>
                     </div>
                   </div>
                   <div className="relative">
