@@ -536,24 +536,6 @@ const Results = () => {
                                 width: `${widthPercent}%`,
                               }}
                             />
-                            {/* Turn indicator icon at start */}
-                            <div
-                              className="absolute flex items-center justify-center"
-                              style={{
-                                left: `${startPercent}%`,
-                                top: '8px',
-                                transform: 'translateX(-50%)',
-                              }}
-                            >
-                              <div className={`
-                                w-3 h-3 rounded-full shadow-lg border-2 bg-background
-                                ${turn.type === 'left' 
-                                  ? 'border-blue-500 bg-blue-500' 
-                                  : 'border-orange-500 bg-orange-500'
-                                }
-                              `}>
-                              </div>
-                            </div>
                             {/* Duration label */}
                             <div
                               className="absolute flex items-center justify-center text-xs font-medium"
