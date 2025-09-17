@@ -185,20 +185,20 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
       
       {/* Instructions section - outside dropzone */}
       {!selectedVideo && (
-        <div className="mt-6 p-6 bg-card/20 rounded-2xl border border-border/30 backdrop-blur-sm">
-          <div className="flex flex-col md:flex-row items-start gap-6">
+        <div className="mt-6">
+          <div className="flex flex-row items-start gap-4">
             {/* Thumbnail */}
             <div className="flex-shrink-0">
               <img 
                 src={skierThumbnail} 
                 alt="Example skiing video" 
-                className="w-32 h-18 rounded-lg object-cover border border-border/50 shadow-sm"
+                className="w-24 h-16 sm:w-32 sm:h-18 rounded-lg object-cover border border-border/50 shadow-sm"
               />
               <p className="text-xs text-muted-foreground mt-2 text-center font-medium">Example video angle</p>
             </div>
             
             {/* Instructions */}
-            <div className="space-y-3">
+            <div className="space-y-3 min-w-0 flex-1">
               <h4 className="text-sm font-semibold text-foreground mb-3">For best results:</h4>
               <div className="space-y-2">
                 {[
