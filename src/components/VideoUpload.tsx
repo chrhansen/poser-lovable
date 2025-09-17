@@ -119,20 +119,21 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
             </div>
             
             <h3 className="text-lg md:text-xl font-semibold mb-4 text-gradient transition-all duration-300">
-              {dragActive ? "Drop your video here!" : "Drag and Drop file here or"}
+              {dragActive ? "Drop your video here!" : (
+                <>
+                  Drag and Drop file here or{' '}
+                  <span 
+                    className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors duration-200 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fileInputRef.current?.click();
+                    }}
+                  >
+                    Choose file
+                  </span>
+                </>
+              )}
             </h3>
-            
-            {!dragActive && (
-              <button 
-                className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors duration-200"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  fileInputRef.current?.click();
-                }}
-              >
-                Choose file
-              </button>
-            )}
           </div>
           
           <input
