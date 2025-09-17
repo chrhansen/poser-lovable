@@ -162,7 +162,7 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="text-center py-12 text-muted-foreground border-t border-border/50 bg-card/20">
-        <p className="text-sm font-medium">© 2024 Poser.pro - Ski Pose Analysis</p>
+        <p className="text-sm font-medium">© 2025 Poser.pro</p>
       </footer>
 
       {/* Login Modal */}
