@@ -123,7 +123,7 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
                 <>
                   Drag and Drop file here or{' '}
                   <span 
-                    className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors duration-200 cursor-pointer"
+                    className="text-lg md:text-xl text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors duration-200 cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       fileInputRef.current?.click();
