@@ -185,7 +185,7 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
       
       {/* Instructions section - outside dropzone */}
       {!selectedVideo && (
-        <div className="mt-6">
+        <div className="mt-6 ml-12">
           <div className="flex flex-row items-start gap-4">
             {/* Thumbnail */}
             <div className="flex-shrink-0">
