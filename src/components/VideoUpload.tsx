@@ -118,54 +118,20 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
               )}
             </div>
             
-            <h3 className="text-lg md:text-xl font-semibold mb-6 text-gradient transition-all duration-300">
+            <h3 className="text-lg md:text-xl font-semibold mb-4 text-gradient transition-all duration-300">
               {dragActive ? "Drop your video here!" : "Drag and Drop file here or"}
             </h3>
             
             {!dragActive && (
-              <>
-                <button 
-                  className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors duration-200 mb-8"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fileInputRef.current?.click();
-                  }}
-                >
-                  Choose file
-                </button>
-                
-                {/* Instructions section */}
-                <div className="mt-8 pt-6 border-t border-border/30">
-                  <div className="flex flex-col md:flex-row items-start gap-6">
-                    {/* Thumbnail */}
-                    <div className="flex-shrink-0">
-                      <img 
-                        src={skierThumbnail} 
-                        alt="Example skiing video" 
-                        className="w-32 h-18 rounded-lg object-cover border border-border/50 shadow-sm"
-                      />
-                      <p className="text-xs text-muted-foreground mt-2 text-center font-medium">Example video angle</p>
-                    </div>
-                    
-                    {/* Instructions */}
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-foreground mb-3">For best results:</h4>
-                      <div className="space-y-2">
-                        {[
-                          "A good quality video",
-                          "Skier is skiing towards the camera", 
-                          "Best for short turns"
-                        ].map((instruction, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-                            <p className="text-sm text-muted-foreground font-medium">{instruction}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
+              <button 
+                className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors duration-200"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fileInputRef.current?.click();
+                }}
+              >
+                Choose file
+              </button>
             )}
           </div>
           
@@ -214,6 +180,40 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
           >
             {isSignedIn ? "Analyze Video" : "Continue to Email Verification"}
           </Button>
+        </div>
+      )}
+      
+      {/* Instructions section - outside dropzone */}
+      {!selectedVideo && (
+        <div className="mt-6 p-6 bg-card/20 rounded-2xl border border-border/30 backdrop-blur-sm">
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            {/* Thumbnail */}
+            <div className="flex-shrink-0">
+              <img 
+                src={skierThumbnail} 
+                alt="Example skiing video" 
+                className="w-32 h-18 rounded-lg object-cover border border-border/50 shadow-sm"
+              />
+              <p className="text-xs text-muted-foreground mt-2 text-center font-medium">Example video angle</p>
+            </div>
+            
+            {/* Instructions */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-foreground mb-3">For best results:</h4>
+              <div className="space-y-2">
+                {[
+                  "A good quality video",
+                  "Skier is skiing towards the camera", 
+                  "Best for short turns"
+                ].map((instruction, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    <p className="text-sm text-muted-foreground font-medium">{instruction}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
