@@ -194,7 +194,6 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
                 alt="Example skiing video" 
                 className="w-24 h-16 sm:w-32 sm:h-18 rounded-lg object-cover border border-border/50 shadow-sm"
               />
-              <p className="text-xs text-muted-foreground mt-2 text-center font-medium">Example video angle</p>
             </div>
             
             {/* Instructions */}
