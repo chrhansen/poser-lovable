@@ -199,11 +199,10 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
             
             {/* Instructions */}
             <div className="space-y-3 min-w-0 flex-1">
-              <h4 className="text-sm font-semibold text-foreground mb-3">For best results:</h4>
               <div className="space-y-2">
                 {[
+                  "Skiing towards the camera", 
                   "A good quality video",
-                  "Skier is skiing towards the camera", 
                   "Best for short turns"
                 ].map((instruction, index) => (
                   <div key={index} className="flex items-center gap-2">
