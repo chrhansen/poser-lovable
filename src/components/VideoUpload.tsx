@@ -132,10 +132,6 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
                 Choose file
               </button>
             )}
-            
-            <p className="text-xs md:text-sm text-muted-foreground/80 mt-4">
-              Supported formats: MP4, MOV, AVI
-            </p>
           </div>
           
           <input
