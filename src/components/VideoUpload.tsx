@@ -192,7 +192,7 @@ export const VideoUpload = ({ onVideoUpload, isSignedIn = false }: VideoUploadPr
               <img 
                 src={skierThumbnail} 
                 alt="Example skiing video" 
-                className="w-24 h-24 sm:w-32 sm:h-18 rounded-lg object-cover border border-border/50 shadow-sm"
+                className="w-24 h-20 sm:w-32 sm:h-18 rounded-lg object-cover border border-border/50 shadow-sm"
               />
             </div>
             
