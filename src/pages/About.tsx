@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Mountain, Linkedin, Github, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const About = () => {
   return (
@@ -39,6 +40,16 @@ const About = () => {
 
           <Card className="backdrop-blur-sm bg-card/50 border-border/50">
             <CardContent className="p-8 space-y-6">
+              {/* Profile photo section */}
+              <div className="flex flex-col items-center mb-6">
+                <Avatar className="w-24 h-24 mb-4 ring-2 ring-primary/20">
+                  <AvatarImage src="/path-to-your-photo.jpg" alt="Creator photo" />
+                  <AvatarFallback className="bg-primary/10 text-primary text-lg font-medium">
+                    You
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              
               <div className="space-y-4">
                 <h2 className="text-2xl font-semibold text-foreground">
                   Hi, I'm the creator of Poser
