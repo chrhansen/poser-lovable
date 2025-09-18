@@ -45,23 +45,30 @@ const Index = () => {
             </div>
             <h1 className="text-xl font-semibold text-foreground tracking-tight">Poser</h1>
           </div>
-          {isLoggedIn ? (
-            <Link to="/results">
-              <Button variant="outline" className="flex items-center gap-2 hover:bg-accent/50 transition-all duration-300 hover:scale-105">
-                <BarChart3 className="w-4 h-4" />
-                View Dashboard
+          <div className="flex items-center gap-3">
+            <Link to="/about">
+              <Button variant="ghost" className="text-muted-foreground hover:text-foreground transition-colors">
+                About
               </Button>
             </Link>
-          ) : (
-            <Button 
-              variant="outline" 
-              onClick={() => setShowLoginModal(true)}
-              className="flex items-center gap-2 hover:bg-accent/50 transition-all duration-300 hover:scale-105"
-            >
-              <LogIn className="w-4 h-4" />
-              Log In
-            </Button>
-          )}
+            {isLoggedIn ? (
+              <Link to="/results">
+                <Button variant="outline" className="flex items-center gap-2 hover:bg-accent/50 transition-all duration-300 hover:scale-105">
+                  <BarChart3 className="w-4 h-4" />
+                  View Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <Button 
+                variant="outline" 
+                onClick={() => setShowLoginModal(true)}
+                className="flex items-center gap-2 hover:bg-accent/50 transition-all duration-300 hover:scale-105"
+              >
+                <LogIn className="w-4 h-4" />
+                Log In
+              </Button>
+            )}
+          </div>
         </header>
 
         {/* Center Content */}
