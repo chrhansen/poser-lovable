@@ -145,7 +145,7 @@ export function AppSidebar() {
 
   return (
     <TooltipProvider>
-      <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)]`} collapsible="icon">
+      <Sidebar className={`${collapsed ? "w-14" : "w-80"} bg-slate-900 border-slate-800 z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)] [&_[data-sidebar=rail]]:hidden`} collapsible="icon">
         <div className="relative h-full">
 
           <SidebarContent className="bg-slate-900 flex flex-col h-full">
