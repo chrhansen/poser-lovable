@@ -10,6 +10,7 @@ import { AppSidebar } from '@/components/AppSidebar';
 import { VideoUpload } from '@/components/VideoUpload';
 import { EmailVerification } from '@/components/EmailVerification';
 import { AnalysisProgress } from '@/components/AnalysisProgress';
+import { ContactForm } from '@/components/ContactForm';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Dot, ComposedChart, ReferenceArea } from 'recharts';
 import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
@@ -303,7 +304,8 @@ const Results = () => {
                 <p className="text-xs sm:text-sm text-slate-400 truncate">{videoFilename}</p>
               </div>
             </div>
-            <div className="px-2 sm:px-6 shrink-0">
+            <div className="px-2 sm:px-6 shrink-0 flex items-center gap-2">
+              <ContactForm />
               <Dialog open={showNewAnalysis} onOpenChange={setShowNewAnalysis}>
                 <DialogTrigger asChild>
                   <Button variant="default" size="sm" className="gap-2">
