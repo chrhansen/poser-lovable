@@ -542,34 +542,52 @@ const Results = () => {
           {!theaterMode && (
             <div className="space-y-6">
               {/* Edge Similarity Metrics */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-3">
+                {/* Combined Edge Similarity Score */}
                 <Card className="border-primary/20 bg-primary/5">
                   <CardContent className="p-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
-                        <div className="w-3 h-3 rounded-full bg-white" />
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shrink-0">
+                        <div className="w-4 h-4 rounded-full bg-white" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xl font-bold text-gradient">87.4%</p>
-                        <p className="text-xs text-muted-foreground">Left Turns</p>
+                        <p className="text-2xl font-bold text-gradient">89.3%</p>
+                        <p className="text-sm text-muted-foreground">Edge Similarity Score</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-                
-                <Card className="border-primary/20 bg-primary/5">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center shrink-0">
-                        <div className="w-3 h-3 rounded-full bg-white" />
+
+                {/* Left and Right Turn Metrics */}
+                <div className="grid grid-cols-2 gap-3">
+                  <Card className="border-primary/20 bg-primary/5">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
+                          <div className="w-3 h-3 rounded-full bg-white" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xl font-bold text-gradient">87.4%</p>
+                          <p className="text-xs text-muted-foreground">Left Turns</p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-xl font-bold text-gradient">91.2%</p>
-                        <p className="text-xs text-muted-foreground">Right Turns</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border-primary/20 bg-primary/5">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center shrink-0">
+                          <div className="w-3 h-3 rounded-full bg-white" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xl font-bold text-gradient">91.2%</p>
+                          <p className="text-xs text-muted-foreground">Right Turns</p>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
 
               {/* Action Buttons */}
