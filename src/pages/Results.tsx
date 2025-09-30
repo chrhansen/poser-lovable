@@ -551,7 +551,7 @@ const Results = () => {
                         <div className="w-4 h-4 rounded-full bg-white" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-2xl font-bold text-gradient">89.3%</p>
+                        <p className="text-2xl font-bold text-gradient">89%</p>
                         <p className="text-sm text-muted-foreground">Edge Similarity Score</p>
                       </div>
                     </div>
@@ -567,7 +567,7 @@ const Results = () => {
                           <div className="w-3 h-3 rounded-full bg-white" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xl font-bold text-gradient">87.4%</p>
+                          <p className="text-xl font-bold text-gradient">87%</p>
                           <p className="text-xs text-muted-foreground">Left Turns</p>
                         </div>
                       </div>
@@ -581,7 +581,7 @@ const Results = () => {
                           <div className="w-3 h-3 rounded-full bg-white" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xl font-bold text-gradient">91.2%</p>
+                          <p className="text-xl font-bold text-gradient">91%</p>
                           <p className="text-xs text-muted-foreground">Right Turns</p>
                         </div>
                       </div>
