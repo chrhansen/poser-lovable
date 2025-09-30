@@ -13,7 +13,8 @@ import { AnalysisProgress } from '@/components/AnalysisProgress';
 import { ContactForm } from '@/components/ContactForm';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Dot, ComposedChart, ReferenceArea } from 'recharts';
-import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize } from 'lucide-react';
+import { Download, Play, BarChart3, TrendingUp, Clock, CheckCircle, Menu, Plus, Trash2, XCircle, Maximize, Minimize, Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Types for FastAPI integration
 interface AnalysisMetric {
@@ -550,9 +551,21 @@ const Results = () => {
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shrink-0">
                         <div className="w-4 h-4 rounded-full bg-white" />
                       </div>
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="text-2xl font-bold text-gradient">89%</p>
-                        <p className="text-sm text-muted-foreground">Edge Similarity Score</p>
+                        <div className="flex items-center gap-1">
+                          <p className="text-sm text-muted-foreground">Edge Similarity Score</p>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-xs">
+                                <p className="text-sm">Edge Similarity is a measure of how parallel your shins, thereby ski edges, are during a turn. The score is based on the best 4 consecutive turns.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
