@@ -576,8 +576,8 @@ const Results = () => {
                   <Card className="border-primary/20 bg-primary/5">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center shrink-0">
-                          <div className="w-3 h-3 rounded-full bg-muted-foreground/30" />
+                        <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
+                          <div className="w-3 h-3 rounded-full bg-white" />
                         </div>
                         <div className="min-w-0">
                           <p className="text-xl font-bold text-muted-foreground">—</p>
