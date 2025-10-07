@@ -580,8 +580,8 @@ const Results = () => {
                           <div className="w-3 h-3 rounded-full bg-white" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xl font-bold text-muted-foreground">—</p>
-                          <p className="text-xs text-muted-foreground">Left Turns</p>
+                          <p className="text-xs text-muted-foreground leading-tight">Not enough left turns detected</p>
+                          <p className="text-xs text-muted-foreground/60 mt-0.5">Left Turns</p>
                         </div>
                       </div>
                     </CardContent>
