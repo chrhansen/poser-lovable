@@ -613,12 +613,12 @@ const Results = () => {
                         <div className="grid grid-cols-2 gap-3">
                           <Card className="border-primary/20 bg-primary/5">
                             <CardContent className="p-4">
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-start gap-2">
                                 <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
                                   <div className="w-3 h-3 rounded-full bg-white" />
                                 </div>
-                                <div className="min-w-0">
-                                  <p className="text-xl font-bold text-muted-foreground/60 italic leading-tight">Not enough left turns</p>
+                                <div className="min-w-0 flex flex-col">
+                                  <p className="text-xs text-muted-foreground/60 leading-tight italic mb-1">Not enough left turns</p>
                                   <div className="flex items-center gap-1">
                                     <p className="text-xs text-muted-foreground">Left Turns</p>
                                     <TooltipProvider delayDuration={200}>
