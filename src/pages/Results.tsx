@@ -590,7 +590,7 @@ const Results = () => {
                                 <p className="text-2xl font-bold text-gradient">89%</p>
                                 <div className="flex items-center gap-1">
                                   <p className="text-sm text-muted-foreground">Edge Similarity Score</p>
-                                  <TooltipProvider>
+                                  <TooltipProvider delayDuration={200}>
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
@@ -618,8 +618,20 @@ const Results = () => {
                                   <div className="w-3 h-3 rounded-full bg-white" />
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="text-xs text-muted-foreground leading-tight">Not enough left turns</p>
-                                  <p className="text-xs text-muted-foreground/60 mt-0.5">Left Turns</p>
+                                  <p className="text-xs text-muted-foreground leading-tight italic">Not enough left turns</p>
+                                  <div className="flex items-center gap-1 mt-0.5">
+                                    <p className="text-xs text-muted-foreground/60">Left Turns</p>
+                                    <TooltipProvider delayDuration={200}>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Info className="h-3 w-3 text-muted-foreground/60 cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-xs">
+                                          <p className="text-sm">Best rolling median of 3 consecutive left turns</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </div>
                                 </div>
                               </div>
                             </CardContent>
@@ -633,7 +645,19 @@ const Results = () => {
                                 </div>
                                 <div className="min-w-0">
                                   <p className="text-xl font-bold text-gradient">91%</p>
-                                  <p className="text-xs text-muted-foreground">Right Turns</p>
+                                  <div className="flex items-center gap-1">
+                                    <p className="text-xs text-muted-foreground">Right Turns</p>
+                                    <TooltipProvider delayDuration={200}>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Info className="h-3 w-3 text-muted-foreground cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-xs">
+                                          <p className="text-sm">Best rolling median of 3 consecutive right turns</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </div>
                                 </div>
                               </div>
                             </CardContent>
