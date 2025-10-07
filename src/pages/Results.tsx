@@ -618,13 +618,13 @@ const Results = () => {
                                   <div className="w-3 h-3 rounded-full bg-white" />
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="text-xs text-muted-foreground leading-tight italic">Not enough left turns</p>
-                                  <div className="flex items-center gap-1 mt-0.5">
-                                    <p className="text-xs text-muted-foreground/60">Left Turns</p>
+                                  <p className="text-xs text-muted-foreground/60 leading-tight italic">Not enough left turns</p>
+                                  <div className="flex items-center gap-1">
+                                    <p className="text-xs text-muted-foreground">Left Turns</p>
                                     <TooltipProvider delayDuration={200}>
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <Info className="h-3 w-3 text-muted-foreground/60 cursor-help" />
+                                          <Info className="h-3 w-3 text-muted-foreground cursor-help" />
                                         </TooltipTrigger>
                                         <TooltipContent className="max-w-xs">
                                           <p className="text-sm">Best rolling median of 3 consecutive left turns</p>
