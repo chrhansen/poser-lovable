@@ -617,9 +617,9 @@ const Results = () => {
                                 <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
                                   <div className="w-3 h-3 rounded-full bg-white" />
                                 </div>
-                                <div className="min-w-0 flex flex-col">
-                                  <p className="text-xs text-muted-foreground/60 leading-tight italic mb-1">Not enough left turns</p>
-                                  <div className="flex items-center gap-1">
+                                <div className="min-w-0 flex flex-col justify-between h-full">
+                                  <p className="text-xs text-muted-foreground/60 leading-tight italic">Not enough left turns</p>
+                                  <div className="flex items-center gap-1 mt-auto pt-1">
                                     <p className="text-xs text-muted-foreground">Left Turns</p>
                                     <TooltipProvider delayDuration={200}>
                                       <Tooltip>
