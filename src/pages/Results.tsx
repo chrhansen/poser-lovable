@@ -42,6 +42,7 @@ import {
   ReferenceArea,
   Bar,
   BarChart,
+  Cell,
 } from "recharts";
 import {
   Download,
@@ -209,18 +210,20 @@ const Results = () => {
 
   // Mock turn data for bar chart - this would come from FastAPI
   const turnsData = [
-    { apex_time: 14400, edge_similarity: 38.2 },
-    { apex_time: 15560, edge_similarity: 63.46 },
-    { apex_time: 16440, edge_similarity: 88.67 },
-    { apex_time: 17120, edge_similarity: 52.67 },
-    { apex_time: 17560, edge_similarity: 73.72 },
-    { apex_time: 18520, edge_similarity: 81.66 },
+    { apex_time: 14400, turn_type: "right", edge_similarity: 38.2 },
+    { apex_time: 15560, turn_type: "left", edge_similarity: 63.46 },
+    { apex_time: 16440, turn_type: "right", edge_similarity: 88.67 },
+    { apex_time: 17120, turn_type: "left", edge_similarity: 52.67 },
+    { apex_time: 17560, turn_type: "right", edge_similarity: 73.72 },
+    { apex_time: 18520, turn_type: "left", edge_similarity: 81.66 },
   ];
 
   // Convert apex_time from milliseconds to seconds for the chart
   const chartData = turnsData.map(turn => ({
     time: turn.apex_time / 1000, // Convert ms to seconds
     similarity: turn.edge_similarity,
+    turnType: turn.turn_type,
+    fill: turn.turn_type === "left" ? "#3b82f6" : "#f97316", // Blue for left, orange for right
   }));
 
   const chartConfig = {
@@ -489,10 +492,19 @@ const Results = () => {
                                 />
                                 <Bar
                                   dataKey="similarity"
-                                  fill="hsl(var(--primary))"
                                   radius={[4, 4, 0, 0]}
                                   maxBarSize={20}
-                                />
+                                  label={{
+                                    position: 'top',
+                                    formatter: (value: number) => `${Math.round(value)}%`,
+                                    fill: 'hsl(var(--foreground))',
+                                    fontSize: 12,
+                                  }}
+                                >
+                                  {chartData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                                  ))}
+                                </Bar>
                               </BarChart>
                             </ChartContainer>
                           </div>
