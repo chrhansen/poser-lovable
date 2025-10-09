@@ -40,6 +40,8 @@ import {
   Dot,
   ComposedChart,
   ReferenceArea,
+  Bar,
+  BarChart,
 } from "recharts";
 import {
   Download,
@@ -205,66 +207,26 @@ const Results = () => {
     },
   };
 
-  // Mock edge similarity data for graph - this would come from FastAPI
-  const edgeSimilarityData = [
-    { time: 0, similarity: 85 },
-    { time: 1, similarity: 88 },
-    { time: 2, similarity: 92 },
-    { time: 3, similarity: 89 },
-    { time: 4, similarity: 94 },
-    { time: 5, similarity: 91 },
-    { time: 6, similarity: 87 },
-    { time: 7, similarity: 93 },
-    { time: 8, similarity: 96 },
-    { time: 9, similarity: 90 },
-    { time: 10, similarity: 88 },
-    { time: 11, similarity: 92 },
-    { time: 12, similarity: 95 },
-    { time: 13, similarity: 91 },
-    { time: 14, similarity: 89 },
-    { time: 15, similarity: 93 },
+  // Mock turn data for bar chart - this would come from FastAPI
+  const turnsData = [
+    { apex_time: 14400, edge_similarity: 38.2 },
+    { apex_time: 15560, edge_similarity: 63.46 },
+    { apex_time: 16440, edge_similarity: 88.67 },
+    { apex_time: 17120, edge_similarity: 52.67 },
+    { apex_time: 17560, edge_similarity: 73.72 },
+    { apex_time: 18520, edge_similarity: 81.66 },
   ];
 
-  // Mock turn indicator data with durations - this would come from FastAPI
-  const turnIndicators = [
-    { startTime: 1.5, endTime: 3, type: "left" as const },
-    { startTime: 4, endTime: 5.5, type: "right" as const },
-    { startTime: 6.5, endTime: 8, type: "left" as const },
-    { startTime: 9, endTime: 10.5, type: "right" as const },
-    { startTime: 11.5, endTime: 13, type: "left" as const },
-    { startTime: 14, endTime: 15.5, type: "right" as const },
-  ];
-
-  // Combine data for ComposedChart - create data points every 0.1s for smooth bars
-  const combinedChartData = [];
-  for (let i = 0; i <= 150; i++) {
-    // 0 to 15 seconds in 0.1s increments
-    const time = i / 10;
-    const dataPoint = edgeSimilarityData.find((d) => d.time === Math.round(time));
-
-    // Find active turn at this time point
-    const activeTurn = turnIndicators.find((turn) => time >= turn.startTime && time <= turn.endTime);
-
-    combinedChartData.push({
-      time,
-      similarity: dataPoint?.similarity || 0,
-      leftTurn: activeTurn?.type === "left" ? 100 : 0,
-      rightTurn: activeTurn?.type === "right" ? 100 : 0,
-    });
-  }
+  // Convert apex_time from milliseconds to seconds for the chart
+  const chartData = turnsData.map(turn => ({
+    time: turn.apex_time / 1000, // Convert ms to seconds
+    similarity: turn.edge_similarity,
+  }));
 
   const chartConfig = {
     similarity: {
       label: "Edge Similarity",
       color: "hsl(var(--primary))",
-    },
-    leftTurn: {
-      label: "Left Turn",
-      color: "#3b82f6",
-    },
-    rightTurn: {
-      label: "Right Turn",
-      color: "#f97316",
     },
   };
 
@@ -481,23 +443,13 @@ const Results = () => {
                     {!theaterMode && (
                       <Card className="mt-6 border-primary/20">
                         <CardHeader>
-                          <CardTitle>Edge Similarity</CardTitle>
+                          <CardTitle>Edge Similarity by Turn</CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <div className="mb-4 flex items-center gap-4 text-sm">
-                            <div className="flex items-center gap-2">
-                              <div className="w-4 h-4 rounded-full bg-blue-500" />
-                              <span className="text-muted-foreground">Left Turns</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="w-4 h-4 rounded-full bg-orange-500" />
-                              <span className="text-muted-foreground">Right Turns</span>
-                            </div>
-                          </div>
                           <div className="relative">
                             <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                              <ComposedChart
-                                data={combinedChartData}
+                              <BarChart
+                                data={chartData}
                                 margin={{
                                   left: 12,
                                   right: 12,
@@ -512,6 +464,8 @@ const Results = () => {
                                   axisLine={false}
                                   tickMargin={8}
                                   tickFormatter={(value) => `${value}s`}
+                                  type="number"
+                                  domain={['dataMin - 1', 'dataMax + 1']}
                                 />
                                 <YAxis
                                   tickLine={false}
@@ -525,48 +479,21 @@ const Results = () => {
                                   content={
                                     <ChartTooltipContent
                                       indicator="line"
-                                      labelFormatter={(value) => {
-                                        const turn = turnIndicators.find(
-                                          (t) => value >= t.startTime && value <= t.endTime,
-                                        );
-                                        return turn
-                                          ? `Time: ${value}s (${turn.type === "left" ? "Left" : "Right"} Turn - ${(turn.endTime - turn.startTime).toFixed(1)}s duration)`
-                                          : `Time: ${value}s`;
-                                      }}
-                                      formatter={(value, name) => {
-                                        if (name === "leftTurn" || name === "rightTurn") return null;
-                                        return [
-                                          `${value}%`,
-                                          chartConfig[name as keyof typeof chartConfig]?.label || name,
-                                        ];
-                                      }}
+                                      labelFormatter={(value) => `Time: ${value}s`}
+                                      formatter={(value, name) => [
+                                        `${Number(value).toFixed(2)}%`,
+                                        chartConfig[name as keyof typeof chartConfig]?.label || name,
+                                      ]}
                                     />
                                   }
                                 />
-                                {/* ReferenceArea components for turn indicators */}
-                                {turnIndicators.map((turn, index) => (
-                                  <ReferenceArea
-                                    key={index}
-                                    x1={turn.startTime}
-                                    x2={turn.endTime}
-                                    y1={0}
-                                    y2={100}
-                                    fill={turn.type === "left" ? "#3b82f6" : "#f97316"}
-                                    fillOpacity={0.3}
-                                    stroke="none"
-                                  />
-                                ))}
-                                {/* Area chart for edge similarity */}
-                                <Area
+                                <Bar
                                   dataKey="similarity"
-                                  type="monotone"
                                   fill="hsl(var(--primary))"
-                                  fillOpacity={0.4}
-                                  stroke="hsl(var(--primary))"
-                                  strokeWidth={2}
-                                  dot={false}
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={20}
                                 />
-                              </ComposedChart>
+                              </BarChart>
                             </ChartContainer>
                           </div>
                         </CardContent>
