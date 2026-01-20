@@ -61,10 +61,18 @@ const EmbedWidget = () => {
   };
 
   const handleTrimChange = (values: number[]) => {
-    setTrimRange(values);
     if (videoRef.current && videoDuration > 0) {
-      videoRef.current.currentTime = (values[0] / 100) * videoDuration;
+      // Determine which handle moved by comparing with previous values
+      const startChanged = values[0] !== trimRange[0];
+      const endChanged = values[1] !== trimRange[1];
+      
+      if (startChanged) {
+        videoRef.current.currentTime = (values[0] / 100) * videoDuration;
+      } else if (endChanged) {
+        videoRef.current.currentTime = (values[1] / 100) * videoDuration;
+      }
     }
+    setTrimRange(values);
   };
 
   const togglePlayPause = () => {
