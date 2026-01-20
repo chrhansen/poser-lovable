@@ -60,19 +60,44 @@ const EmbedWidget = () => {
     }
   };
 
+  const MAX_TRIM_SECONDS = 20;
+
   const handleTrimChange = (values: number[]) => {
     if (videoRef.current && videoDuration > 0) {
+      const maxRangePercent = (MAX_TRIM_SECONDS / videoDuration) * 100;
+      let [start, end] = values;
+      
       // Determine which handle moved by comparing with previous values
       const startChanged = values[0] !== trimRange[0];
       const endChanged = values[1] !== trimRange[1];
       
-      if (startChanged) {
-        videoRef.current.currentTime = (values[0] / 100) * videoDuration;
-      } else if (endChanged) {
-        videoRef.current.currentTime = (values[1] / 100) * videoDuration;
+      // Enforce max duration constraint
+      if (end - start > maxRangePercent) {
+        if (endChanged) {
+          // End knob moved too far, pull start along
+          start = end - maxRangePercent;
+        } else if (startChanged) {
+          // Start knob moved too far, pull end along
+          end = start + maxRangePercent;
+        }
       }
+      
+      // Clamp values
+      start = Math.max(0, Math.min(start, 100 - maxRangePercent));
+      end = Math.min(100, Math.max(end, maxRangePercent));
+      
+      const constrainedValues = [start, end];
+      
+      if (startChanged || (endChanged && values[0] !== start)) {
+        videoRef.current.currentTime = (start / 100) * videoDuration;
+      } else if (endChanged) {
+        videoRef.current.currentTime = (end / 100) * videoDuration;
+      }
+      
+      setTrimRange(constrainedValues);
+    } else {
+      setTrimRange(values);
     }
-    setTrimRange(values);
   };
 
   const togglePlayPause = () => {
