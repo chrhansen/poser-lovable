@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Progress } from "@/components/ui/progress";
 
-type WidgetStep = "upload" | "trim" | "email" | "processing" | "results";
+type WidgetStep = "upload" | "trim" | "email" | "awaiting_confirmation" | "processing" | "results";
 
 const EmbedWidget = () => {
   const [step, setStep] = useState<WidgetStep>("upload");
@@ -27,6 +27,16 @@ const EmbedWidget = () => {
     turnsAnalyzed: 8,
     videoUrl: videoUrl,
   };
+
+  // Mock polling: wait 5 seconds in awaiting_confirmation then move to processing
+  useEffect(() => {
+    if (step === "awaiting_confirmation") {
+      const timeout = setTimeout(() => {
+        setStep("processing");
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [step]);
 
   useEffect(() => {
     if (step === "processing") {
@@ -122,7 +132,7 @@ const EmbedWidget = () => {
       return;
     }
     setEmailError("");
-    setStep("processing");
+    setStep("awaiting_confirmation");
   };
 
   const formatTime = (seconds: number) => {
@@ -280,6 +290,36 @@ const EmbedWidget = () => {
             </div>
           )}
 
+          {/* Step: Awaiting Confirmation */}
+          {step === "awaiting_confirmation" && (
+            <div className="space-y-6 py-4">
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-full bg-slate-700 flex items-center justify-center mx-auto mb-4 relative">
+                  <Loader2 className="w-10 h-10 text-blue-400 animate-spin" />
+                  <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
+                </div>
+                <h3 className="text-white font-medium mb-1">Confirm your email</h3>
+                <p className="text-slate-400 text-sm">
+                  Click the link we sent to start analysis
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-400">Processing</span>
+                  <span className="text-blue-400">0%</span>
+                </div>
+                <Progress value={0} className="h-2" />
+              </div>
+
+              <div className="bg-slate-700/50 rounded-lg p-3 text-center">
+                <p className="text-slate-300 text-sm">
+                  📧 We will email you at <span className="text-blue-400">{email}</span> when ready
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Step: Processing */}
           {step === "processing" && (
             <div className="space-y-6 py-4">
@@ -330,7 +370,7 @@ const EmbedWidget = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-slate-700/50 rounded-lg p-4 text-center">
                   <div className="text-3xl font-bold text-white mb-1">
-                    {resultsData.edgeSimilarity}%
+                    {Math.round(resultsData.edgeSimilarity)}%
                   </div>
                   <div className="text-slate-400 text-sm">Edge Similarity</div>
                 </div>
