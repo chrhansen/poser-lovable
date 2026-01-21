@@ -139,31 +139,6 @@ const EmbedWidget = () => {
       {/* Widget Container - This is what would be embedded */}
       <Card className="w-full max-w-md bg-slate-800/90 border-slate-700 shadow-2xl backdrop-blur-sm">
         <CardContent className="p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">P</span>
-              </div>
-              <span className="text-white font-semibold">Poser Analysis</span>
-            </div>
-            {step !== "upload" && step !== "results" && (
-              <div className="flex gap-1">
-                {["trim", "email", "processing"].map((s, i) => (
-                  <div
-                    key={s}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      step === s
-                        ? "bg-blue-500"
-                        : ["trim", "email", "processing"].indexOf(step) > i
-                        ? "bg-blue-500/50"
-                        : "bg-slate-600"
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* Step: Upload */}
           {step === "upload" && (
