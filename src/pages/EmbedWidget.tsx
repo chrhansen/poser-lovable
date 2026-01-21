@@ -304,17 +304,9 @@ const EmbedWidget = () => {
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Processing</span>
-                  <span className="text-blue-400">0%</span>
-                </div>
-                <Progress value={0} className="h-2" />
-              </div>
-
               <div className="bg-slate-700/50 rounded-lg p-3 text-center">
                 <p className="text-slate-300 text-sm">
-                  📧 We will email you at <span className="text-blue-400">{email}</span> when ready
+                  📧 We have emailed you at <span className="text-blue-400">{email}</span> to confirm your email
                 </p>
               </div>
             </div>
