@@ -368,7 +368,7 @@ const EmbedWidget = () => {
           {/* Footer */}
           <div className="mt-6 pt-4 border-t border-slate-700/50 text-center">
             <p className="text-slate-500 text-xs">
-              Powered by <span className="text-blue-400">Poser</span>
+              Powered by <a href="https://poser.pro" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition-colors">Poser.pro</a>
             </p>
           </div>
         </CardContent>
