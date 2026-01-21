@@ -66,7 +66,16 @@ const EmbedWidget = () => {
 
   const handleVideoLoaded = () => {
     if (videoRef.current) {
-      setVideoDuration(videoRef.current.duration);
+      const duration = videoRef.current.duration;
+      setVideoDuration(duration);
+      
+      // Set initial trim to 0-20 seconds (or full video if shorter)
+      if (duration <= MAX_TRIM_SECONDS) {
+        setTrimRange([0, 100]);
+      } else {
+        const endPercent = (MAX_TRIM_SECONDS / duration) * 100;
+        setTrimRange([0, endPercent]);
+      }
     }
   };
 
