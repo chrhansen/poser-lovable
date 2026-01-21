@@ -90,7 +90,7 @@ const EmbedWidget = () => {
       const startChanged = values[0] !== trimRange[0];
       const endChanged = values[1] !== trimRange[1];
 
-      // Enforce max duration constraint
+      // Enforce max duration constraint (only between the two knobs)
       if (end - start > maxRangePercent) {
         if (endChanged) {
           // End knob moved too far, pull start along
@@ -101,9 +101,9 @@ const EmbedWidget = () => {
         }
       }
 
-      // Clamp values
-      start = Math.max(0, Math.min(start, 100 - maxRangePercent));
-      end = Math.min(100, Math.max(end, maxRangePercent));
+      // Clamp values to valid range (0-100), no minimum distance from edges
+      start = Math.max(0, Math.min(start, 100));
+      end = Math.max(0, Math.min(end, 100));
 
       const constrainedValues = [start, end];
 
