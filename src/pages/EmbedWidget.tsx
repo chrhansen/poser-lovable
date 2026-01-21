@@ -135,7 +135,7 @@ const EmbedWidget = () => {
   const getEndTime = () => formatTime((trimRange[1] / 100) * videoDuration);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+    <div className="inline-block">
       {/* Widget Container - This is what would be embedded */}
       <Card className="w-full max-w-md bg-slate-800/90 border-slate-700 shadow-2xl backdrop-blur-sm">
         <CardContent className="p-6">
