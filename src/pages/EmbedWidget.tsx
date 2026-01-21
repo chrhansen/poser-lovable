@@ -68,7 +68,7 @@ const EmbedWidget = () => {
     if (videoRef.current) {
       const duration = videoRef.current.duration;
       setVideoDuration(duration);
-      
+
       // Set initial trim to 0-20 seconds (or full video if shorter)
       if (duration <= MAX_TRIM_SECONDS) {
         setTrimRange([0, 100]);
@@ -85,11 +85,11 @@ const EmbedWidget = () => {
     if (videoRef.current && videoDuration > 0) {
       const maxRangePercent = (MAX_TRIM_SECONDS / videoDuration) * 100;
       let [start, end] = values;
-      
+
       // Determine which handle moved by comparing with previous values
       const startChanged = values[0] !== trimRange[0];
       const endChanged = values[1] !== trimRange[1];
-      
+
       // Enforce max duration constraint
       if (end - start > maxRangePercent) {
         if (endChanged) {
@@ -100,19 +100,19 @@ const EmbedWidget = () => {
           end = start + maxRangePercent;
         }
       }
-      
+
       // Clamp values
       start = Math.max(0, Math.min(start, 100 - maxRangePercent));
       end = Math.min(100, Math.max(end, maxRangePercent));
-      
+
       const constrainedValues = [start, end];
-      
+
       if (startChanged || (endChanged && values[0] !== start)) {
         videoRef.current.currentTime = (start / 100) * videoDuration;
       } else if (endChanged) {
         videoRef.current.currentTime = (end / 100) * videoDuration;
       }
-      
+
       setTrimRange(constrainedValues);
     } else {
       setTrimRange(values);
@@ -158,7 +158,6 @@ const EmbedWidget = () => {
       {/* Widget Container - This is what would be embedded */}
       <Card className="w-full max-w-md bg-slate-800/90 border-slate-700 shadow-2xl backdrop-blur-sm">
         <CardContent className="p-6">
-
           {/* Step: Upload */}
           {step === "upload" && (
             <div className="space-y-4">
@@ -172,13 +171,7 @@ const EmbedWidget = () => {
                 <p className="text-white font-medium mb-1">Upload your ski video</p>
                 <p className="text-slate-400 text-sm">MP4, MOV, or WebM • Max 500MB</p>
               </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="video/*"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
+              <input ref={fileInputRef} type="file" accept="video/*" onChange={handleFileSelect} className="hidden" />
               <p className="text-slate-500 text-xs text-center">
                 Your video will be analyzed for ski technique metrics
               </p>
@@ -213,17 +206,11 @@ const EmbedWidget = () => {
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-slate-300 text-sm">
                   <Scissors className="w-4 h-4" />
-                  <span>Select the section to analyze</span>
+                  <span>Select the section to analyze (max. 20 secs.</span>
                 </div>
-                
+
                 <div className="px-1">
-                  <Slider
-                    value={trimRange}
-                    onValueChange={handleTrimChange}
-                    max={100}
-                    step={1}
-                    className="w-full"
-                  />
+                  <Slider value={trimRange} onValueChange={handleTrimChange} max={100} step={1} className="w-full" />
                 </div>
 
                 <div className="flex justify-between text-sm">
@@ -241,10 +228,7 @@ const EmbedWidget = () => {
                 </div>
               </div>
 
-              <Button
-                onClick={() => setStep("email")}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              >
+              <Button onClick={() => setStep("email")} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                 Continue
               </Button>
             </div>
@@ -258,9 +242,7 @@ const EmbedWidget = () => {
                   <Mail className="w-8 h-8 text-blue-400" />
                 </div>
                 <h3 className="text-white font-medium mb-1">Enter your email</h3>
-                <p className="text-slate-400 text-sm">
-                  We'll send you a link to view your analysis results
-                </p>
+                <p className="text-slate-400 text-sm">We'll send you a link to view your analysis results</p>
               </div>
 
               <div className="space-y-2">
@@ -274,15 +256,10 @@ const EmbedWidget = () => {
                   }}
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500"
                 />
-                {emailError && (
-                  <p className="text-red-400 text-sm">{emailError}</p>
-                )}
+                {emailError && <p className="text-red-400 text-sm">{emailError}</p>}
               </div>
 
-              <Button
-                onClick={handleEmailSubmit}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              >
+              <Button onClick={handleEmailSubmit} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                 Analyze My Video
               </Button>
 
@@ -308,9 +285,7 @@ const EmbedWidget = () => {
                   <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
                 </div>
                 <h3 className="text-white font-medium mb-1">Confirm your email</h3>
-                <p className="text-slate-400 text-sm">
-                  Click the link we sent to start analysis
-                </p>
+                <p className="text-slate-400 text-sm">Click the link we sent to start analysis</p>
               </div>
 
               <div className="bg-slate-700/50 rounded-lg p-3 text-center">
@@ -330,9 +305,7 @@ const EmbedWidget = () => {
                   <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
                 </div>
                 <h3 className="text-white font-medium mb-1">Analyzing your video</h3>
-                <p className="text-slate-400 text-sm">
-                  This usually takes 1-2 minutes
-                </p>
+                <p className="text-slate-400 text-sm">This usually takes 1-2 minutes</p>
               </div>
 
               <div className="space-y-2">
@@ -360,33 +333,22 @@ const EmbedWidget = () => {
               </div>
 
               <div className="relative rounded-lg overflow-hidden bg-black">
-                <video
-                  src={videoUrl}
-                  controls
-                  className="w-full aspect-video object-contain"
-                  playsInline
-                />
+                <video src={videoUrl} controls className="w-full aspect-video object-contain" playsInline />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-slate-700/50 rounded-lg p-4 text-center">
-                  <div className="text-3xl font-bold text-white mb-1">
-                    {Math.round(resultsData.edgeSimilarity)}%
-                  </div>
+                  <div className="text-3xl font-bold text-white mb-1">{Math.round(resultsData.edgeSimilarity)}%</div>
                   <div className="text-slate-400 text-sm">Edge Similarity</div>
                 </div>
                 <div className="bg-slate-700/50 rounded-lg p-4 text-center">
-                  <div className="text-3xl font-bold text-white mb-1">
-                    {resultsData.turnsAnalyzed}
-                  </div>
+                  <div className="text-3xl font-bold text-white mb-1">{resultsData.turnsAnalyzed}</div>
                   <div className="text-slate-400 text-sm">Turns Analyzed</div>
                 </div>
               </div>
 
               <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
-                <p className="text-blue-300 text-sm text-center">
-                  Full detailed analysis sent to your email!
-                </p>
+                <p className="text-blue-300 text-sm text-center">Full detailed analysis sent to your email!</p>
               </div>
 
               <Button
@@ -409,7 +371,15 @@ const EmbedWidget = () => {
           {/* Footer */}
           <div className="mt-6 pt-4 border-t border-slate-700/50 text-center">
             <p className="text-slate-500 text-xs">
-              Powered by <a href="https://poser.pro" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition-colors">Poser.pro</a>
+              Powered by{" "}
+              <a
+                href="https://poser.pro"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Poser.pro
+              </a>
             </p>
           </div>
         </CardContent>
