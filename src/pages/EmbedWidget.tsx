@@ -206,7 +206,7 @@ const EmbedWidget = () => {
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-slate-300 text-sm">
                   <Scissors className="w-4 h-4" />
-                  <span>Select the section to analyze (max. 20 secs.</span>
+                  <span>Select the section to analyze (max. 20 seconds)</span>
                 </div>
 
                 <div className="px-1">
