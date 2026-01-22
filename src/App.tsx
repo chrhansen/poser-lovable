@@ -8,6 +8,7 @@ import Results from "./pages/Results";
 import About from "./pages/About";
 import EmbedWidget from "./pages/EmbedWidget";
 import Settings from "./pages/Settings";
+import ConfirmEmail from "./pages/ConfirmEmail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/embed" element={<EmbedWidget />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/confirm-email" element={<ConfirmEmail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
