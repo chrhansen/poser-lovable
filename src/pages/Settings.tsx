@@ -146,7 +146,7 @@ const Settings = () => {
                 <User className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <CardTitle>Profile Settings</CardTitle>
+                <CardTitle>User Settings</CardTitle>
                 <CardDescription>
                   Manage your account information and preferences
                 </CardDescription>
