@@ -7,10 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Camera, Loader2, Save, User } from "lucide-react";
+import { ArrowLeft, Camera, Loader2, Mail, Save, User } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface UserSettings {
   email: string;
+  unconfirmedEmail: string | null;
   fullName: string;
   username: string;
   avatarUrl: string;
@@ -23,8 +25,10 @@ const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Mock initial user data - replace with actual API call
+  // Mock initial user data - replace with actual API call
   const [settings, setSettings] = useState<UserSettings>({
     email: "skier@example.com",
+    unconfirmedEmail: "newemail@example.com", // Mock: set to null to hide notification
     fullName: "John Doe",
     username: "johndoe",
     avatarUrl: "",
@@ -239,6 +243,15 @@ const Settings = () => {
                   placeholder="Enter your email"
                   className="bg-background"
                 />
+                {settings.unconfirmedEmail && (
+                  <Alert className="mt-3 border-amber-500/50 bg-amber-500/10">
+                    <Mail className="h-4 w-4 text-amber-500" />
+                    <AlertDescription className="text-amber-200 text-sm">
+                      We've sent a confirmation link to <span className="font-medium">{settings.unconfirmedEmail}</span>. 
+                      Please check your inbox and click the link to confirm your new email address.
+                    </AlertDescription>
+                  </Alert>
+                )}
                 <p className="text-xs text-muted-foreground">
                   We'll send analysis results and notifications to this email
                 </p>
